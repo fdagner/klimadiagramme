@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Klimadiagramm</title>
+  <link rel="stylesheet" href="css/leaflet.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="js/leaflet.js"></script>
+  <script src="js/chart.umd.min.js"></script>
+  <script src="js/climatedata.js"></script>
+  <script src="js/filter.js"></script>
+</head>
+
+<body>
+  <div style="position: relative;width: 100%;max-width: 800px;margin:0 auto">
+    <h1>Klimadiagramme</h1>
+    <p>Durch Auswahl eines Ortes können Sie ein Walter/Lieth-Klimadiagramm erstellen, herunterladen und ohne
+      Einschränkungen weiterverwenden, zum Beispiel im Unterricht. Datenbasis sind momentan Werte der Niederschläge und
+      Temperaturen im Monatsmittel vom Deutschen Wetterdienst aus den Jahren 1961-1990. Beachten Sie die <a
+        href="https://opendata.dwd.de/climate_environment/CDC/Nutzungsbedingungen_German.pdf">Nutzungsbedingungen</a>
+      für Daten im CDC-OpenData-Bereich des deutschen Wetterdienstes.</p>
+    <div>
+
+      <select id="ortAuswahl" size="5" onchange="anzeigenNachOrt()" class="custom-dropdown">
+        <option value="" selected>Ort auswählen</option>
+      </select>
+
+      <input type="text" id="suchfeld" oninput="sucheOrt()" placeholder="Suche nach Ort" class="search-box">
+      <!-- Checkbox für das Ein- und Ausblenden des Orts -->
+      <div style="display:flex;flex-wrap: wrap;gap: 10px;justify-content: space-between;width:400px">
+        <label>
+          <input type="checkbox" id="showOrtCheckbox" checked onchange="toggleOrtVisibility()"> Ort im Diagramm anzeigen
+        </label>
+        <div><button id="downloadButton" onclick="downloadChart()">
+            <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16"
+              viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+              <path
+                d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+
+    </div>
+    <div style="display:flex;gap:50px">
+      <div class="chart-container" style="position: relative; height: 500px; width: 400px">
+        <canvas id="precipitationAndTemperatureChart"
+          style="position: relative; width: 400px; height: 500px;border: 1px solid silver"></canvas>
+      </div>
+      <div id="map" style="position: relative;width: 350px; height: 350px;"></div>
+    </div>
+    <script>
+      // Dummy-Daten für die Niederschläge pro Monat und Temperaturen
+      const precipitationData = [20, 50, 100, 200, 260, 200, 655, 100, 100, 110, 30, 20];
+      const temperatureData = [8, 12, 15, 30, 16, -28, 4, 8, 5, 1, 5, 12];
+
+      // Summe der Temperaturdaten berechnen
+      const temperatureSum = temperatureData.reduce(
+        (acc, temperature) => acc + temperature,
+        0
+      );
+
+      // Mittelwert berechnen
+      const temperatureAverage = temperatureSum / temperatureData.length;
+      const roundedAverage = temperatureAverage.toFixed(1);
+
+      // Summe der Niederschläge berechnen
+      const precipitationSum = precipitationData.reduce(
+        (acc, precipitation) => acc + precipitation,
+        0
+      );
+      const roundedPrecipitation = precipitationSum.toFixed(0);
+
+      // Funktion zum Anpassen der Farbe basierend auf dem Niederschlagswert
+      function getColor(value) {
+        return value <= 100 ? "#00B0F0" : "#40699C";
+      }
+
+      // Konfiguration für das Diagramm
+      const config = {
+        type: "bar",
+        data: {
+          labels: [
+            "J",
+            "F",
+            "M",
+            "A",
+            "M",
+            "J",
+            "J",
+            "A",
+            "S",
+            "O",
+            "N",
+            "D",
+          ],
+          datasets: [
+            {
+              label: "Temperatur (°C)",
+              data: temperatureData.map((value) => value * 2),
+              type: "line",
+              borderColor: "#BE4B48",
+              lineTension: 0.4,
+              pointRadius: 1,
+              yAxisID: "y2",
+            },
+            {
+              label: "Niederschläge (mm)",
+              data: precipitationData.map((value) => Math.min(value, 100)), // Begrenze den Wert bis 100
+              backgroundColor: "#00B0F0",
+              stack: "stack1",
+              yAxisID: "y1",
+            },
+            {
+              label: "Niederschläge (mm)",
+              data: precipitationData.map(
+                (value) => Math.max(0, value - 100) / 10
+              ), // Rest ab 100
+              backgroundColor: "#40699C",
+              stack: "stack1",
+              yAxisID: "y1",
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            tooltip: {
+              enabled: false,
+            },
+            subtitle: {
+              display: true,
+              color: "gray",
+              text:
+                "T: " +
+                roundedAverage +
+                "° C " +
+                "    N: " +
+                roundedPrecipitation +
+                " mm    " +
+                hoeheData +
+                " m. ü. NN",
+              font: {
+                size: 16,
+                weight: "normal",
+                family: "Arial",
+                style: "normal",
+              },
+            },
+            legend: {
+              display: false,
+            },
+            title: {
+              display: true,
+              text: ortData,
+              font: {
+                size: 20,
+              },
+            },
+          },
+          responsive: true,
+          scales: {
+            x: {
+              ticks: {
+                font: {
+                  size: 14,
+                },
+              },
+              stacked: true,
+              title: {
+                display: true,
+                text: 'Datenquelle: Deutscher Wetterdienst',
+                align: 'end',
+                color: 'grey',
+                padding: {
+                  top: 10,
+                },
+                font: {
+                  size: 11,
+                  style: 'italic'
+                },
+              },
+            },
+            y1: {
+              type: "linear",
+              min: -20 + Math.ceil(Math.min(-10, ...temperatureData) / 10) * 2 * 10,
+              max: 100 + Math.ceil(Math.max(700, ...precipitationData) / 100) * 10,
+              ticks: {
+                font: {
+                  size: 14,
+                },
+                stepSize: 10,
+                callback: function (value, index, values) {
+                  if (value > 100) {
+                    return 100 + (value - 100) * 10;
+                  } else if (value < 0) {
+                    return "";
+                  } else {
+                    return value;
+                  }
+                },
+              },
+              position: "right",
+              title: {
+                display: true,
+                text: "Niederschläge (mm)",
+              },
+            },
+            y2: {
+              type: "linear",
+              position: "left",
+              display: true,
+              min: -20 + Math.ceil(Math.min(-10, ...temperatureData) / 10) * 2 * 10,
+              max: 100 + Math.ceil(Math.max(700, ...precipitationData) / 100) * 10,
+              ticks: {
+                font: {
+                  size: 14,
+                },
+                beginAtZero: true,
+                stepSize: 10,
+                callback: function (value, index, values) {
+                  if (value < 81) {
+                    return value / 2;
+                  } else {
+                    return "";
+                  }
+                },
+              },
+              title: {
+                display: true,
+                text: "Temperatur (°C)",
+              },
+              grid: {
+                drawOnChartArea: false, // only want the grid lines for one axis to show up
+              },
+            },
+          },
+        },
+      };
+
+      // Diagramm erstellen
+      const ctx = document
+        .getElementById("precipitationAndTemperatureChart")
+        .getContext("2d");
+      myChart = new Chart(ctx, config);
+
+      function downloadChart() {
+        // Das Diagramm-Canvas-Element
+        var canvas = document.getElementById(
+          "precipitationAndTemperatureChart"
+        );
+
+        // Konvertiere das Canvas-Element in eine Base64-codierte PNG-URL
+        var dataURL = canvas.toDataURL("image/png");
+
+        // Erstelle einen unsichtbaren HTML-Link
+        var downloadLink = document.createElement("a");
+        downloadLink.href = dataURL;
+
+        // Setze den Dateinamen für den Download
+        var fileName = ortData.toLowerCase().replace(/\s/g, '_') + ".png";
+        downloadLink.download = fileName;
+
+        // Füge den Link zum Dokument hinzu und simuliere einen Klick
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+
+        // Entferne den Link aus dem Dokument
+        document.body.removeChild(downloadLink);
+      }
+
+    </script>
+
+    <script>
+      // Koordinaten für den Marker
+      const markerCoordinates = [parseFloat(latData), parseFloat(lonData)]; // Koordinaten in Zahlen umwandeln
+
+      // Erstelle die Leaflet-Karte
+      const myMap = L.map("map").setView(markerCoordinates, 2);
+
+      // Füge die OpenStreetMap-Basiskarte hinzu
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; OpenStreetMap contributors",
+      }).addTo(myMap);
+
+      // Füge einen Marker mit benutzerdefiniertem Icon hinzu
+      const customIcon = L.icon({
+        iconUrl: 'img/ts-map-pin.svg',
+        iconSize: [32, 32], // Größe des Icons in Pixel
+        iconAnchor: [16, 16], // Position des Ankers relativ zur Icon-Position
+      });
+
+      // Füge den Marker hinzu
+      L.marker(markerCoordinates, { icon: customIcon }).addTo(myMap);
+
+      // Funktion zum Aktualisieren der Leaflet-Karte basierend auf den neuen Koordinaten
+      function updateLeafletMap() {
+        // Neue Koordinaten
+        const newLatLng = L.latLng(parseFloat(latData), parseFloat(lonData));
+
+        // Entferne bestehende Marker, um doppelte Marker zu vermeiden
+        myMap.eachLayer((layer) => {
+          if (layer instanceof L.Marker) {
+            layer.remove();
+          }
+        });
+
+        // Füge den neuen Marker hinzu
+        L.marker(newLatLng, { icon: customIcon }).addTo(myMap);
+
+        // Aktualisiere die Karte
+        myMap.setView(newLatLng, 2);
+      }
+    </script>
+
+</body>
+
+</html>

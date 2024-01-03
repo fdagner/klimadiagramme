@@ -1,0 +1,66 @@
+body {
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    line-height: 1.6;
+  }
+
+  p {
+    margin-bottom: 20px;
+  }
+
+  /* Styles für Links */
+  a {
+    color: #ff4800;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  /* Hover-Effekt für Links */
+  a:hover {
+    color: #ff7f00;
+  }
+
+  select {
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #ff4800;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #333;
+    margin-bottom: 15px;
+  }
+
+  /* Styles für Button */
+  button {
+    padding: 4px 4px;
+    font-size: 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #ff4800;
+    /* Orange Farbe */
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  /* Hover-Effekt für Button */
+  button:hover {
+    background-color: #fc8042;
+  }
+
+  .custom-dropdown {
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ff4800;
+    border-radius: 4px;
+    width: 400px;
+  }
+
+  .search-box {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ff4800;
+    border-radius: 4px;
+    width: 370px;
+    height: 20px;
+  }
