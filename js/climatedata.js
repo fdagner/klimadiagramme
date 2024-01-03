@@ -7,11 +7,14 @@ let latData = "40";
 // Funktion zum Aktualisieren des Dateinamens basierend auf dem aktuellen Ort
 function updateFileName() {
   // Entferne alle Punkte und Sonderzeichen aus dem Ort
-  var cleanOrt = ortData.toLowerCase().replace(/[^\w\s]/g, '').replace(/\s/g, '_');
+  var cleanOrt = ortData
+    .toLowerCase()
+    .replace(/[^\w\s]/g, "")
+    .replace(/\s/g, "_");
   var fileName = cleanOrt + ".png";
   var downloadButton = document.getElementById("downloadButton");
   downloadButton.download = fileName;
-};
+}
 // Funktion zum Anzeigen von Daten nach Auswahl des Orts
 function anzeigenNachOrt() {
   var selectedOrtId = document.getElementById("ortAuswahl").value;
@@ -32,9 +35,7 @@ function anzeigenNachOrt() {
 
     // Fügen Sie die Niederschlagsdaten in das precipitationData-Array ein
     for (var i = 16; i <= 27; i++) {
-      var niederschlag = parseFloat(
-        datensatz[spalten[i]].replace(",", ".")
-      );
+      var niederschlag = parseFloat(datensatz[spalten[i]].replace(",", "."));
 
       // Überprüfen Sie auf ungültige Werte
       if (!isNaN(niederschlag)) {
@@ -48,17 +49,13 @@ function anzeigenNachOrt() {
 
     // Extrahieren Sie die Temperaturdaten und fügen Sie sie in das temperatureData-Array ein
     for (var j = 4; j <= 15; j++) {
-      var temperatur = parseFloat(
-        datensatz[spalten[j]].replace(",", ".")
-      );
+      var temperatur = parseFloat(datensatz[spalten[j]].replace(",", "."));
 
       // Überprüfen Sie auf ungültige Werte
       if (!isNaN(temperatur)) {
         temperatureData[j - 4] = temperatur;
       } else {
-        console.warn(
-          "Ungültiger Wert für Temperatur in Spalte " + (j + 1)
-        );
+        console.warn("Ungültiger Wert für Temperatur in Spalte " + (j + 1));
         temperatureData[j - 4] = null; // Fügen Sie null oder einen anderen Wert für ungültige Daten hinzu
       }
     }
@@ -78,7 +75,7 @@ function anzeigenNachOrt() {
       0
     );
     const roundedPrecipitation = precipitationSum.toFixed(0);
-    myChart.options.plugins.subtitle.text =
+    (myChart.options.plugins.subtitle.text =
       "T: " +
       roundedAverage +
       "° C " +
@@ -86,20 +83,17 @@ function anzeigenNachOrt() {
       roundedPrecipitation +
       " mm    " +
       hoeheData +
-      "m. ü. NN",
-      myChart.options.plugins.title.text = ortData;
+      "m. ü. NN"),
+      (myChart.options.plugins.title.text = ortData);
 
-    myChart.options.scales.y1.max =
-      100 + Math.ceil(Math.max(700, ...precipitationData) / 100) * 10,
-      myChart.options.scales.y1.min =
-      -20 + Math.ceil(Math.min(-10, ...temperatureData) / 10) * 2 * 10,
-
-      myChart.options.scales.y2.max =
-      100 + Math.ceil(Math.max(700, ...precipitationData) / 100) * 10,
-      myChart.options.scales.y2.min =
-      -20 + Math.ceil(Math.min(-10, ...temperatureData) / 10) * 2 * 10,
-
-
+    (myChart.options.scales.y1.max =
+      100 + Math.ceil(Math.max(700, ...precipitationData) / 100) * 10),
+      (myChart.options.scales.y1.min =
+        -20 + Math.ceil(Math.min(-10, ...temperatureData) / 10) * 2 * 10),
+      (myChart.options.scales.y2.max =
+        100 + Math.ceil(Math.max(700, ...precipitationData) / 100) * 10),
+      (myChart.options.scales.y2.min =
+        -20 + Math.ceil(Math.min(-10, ...temperatureData) / 10) * 2 * 10),
       // Aktualisieren Sie das Diagramm mit den neuen Daten
       updateChart();
     updateFileName();
@@ -112,17 +106,13 @@ function anzeigenNachOrt() {
 
 // Funktion zum Aktualisieren des Diagramms mit den neuen Daten
 function updateChart() {
-  // Hier können Sie den Code zum Aktualisieren des Diagramms mit den neuen Daten implementieren
-  // Z.B. indem Sie die Konfiguration (config) aktualisieren und das Diagramm neu zeichnen
   config.data.datasets[1].data = precipitationData.map((value) =>
     Math.min(value, 100)
   );
   config.data.datasets[2].data = precipitationData.map(
     (value) => Math.max(0, value - 100) / 10
   );
-  config.data.datasets[0].data = temperatureData.map(
-    (value) => value * 2
-  );
+  config.data.datasets[0].data = temperatureData.map((value) => value * 2);
   myChart.update();
   updateFileName();
 }
