@@ -32,7 +32,7 @@ function anzeigenNachOrt() {
     hoeheData = datensatz["Hoehenlage"];
     lonData = datensatz["Laengengrad"];
     latData = datensatz["Breitengrad"];
-
+   
     // Fügen Sie die Niederschlagsdaten in das precipitationData-Array ein
     for (var i = 16; i <= 27; i++) {
       var niederschlag = parseFloat(datensatz[spalten[i]].replace(",", "."));
@@ -95,6 +95,7 @@ function anzeigenNachOrt() {
       (myChart.options.scales.y2.min =
         -20 + Math.ceil(Math.min(-10, ...temperatureData) / 10) * 2 * 10),
       // Aktualisieren Sie das Diagramm mit den neuen Daten
+      myChart.options.scales.x.title.display = true;
       updateChart();
     updateFileName();
     document.getElementById("showOrtCheckbox").checked = true;
