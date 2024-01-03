@@ -34,9 +34,39 @@ function updateChartData() {
   myChart.data.datasets[1].data = chartPrecipitationData1;
   myChart.data.datasets[2].data = chartPrecipitationData2;
 
-  // Aktualisierung des Diagramms
+  // Aktualisieren Sie das Diagramm mit den neuen Daten
   myChart.update();
+
+  // Berechnen Sie die neuen Werte für den Durchschnitt und die Summe
+  const temperatureSum = temperatureValues.reduce((acc, temperature) => acc + temperature, 0);
+  const temperatureAverage = temperatureSum / temperatureData.length;
+  const roundedAverage = temperatureAverage.toFixed(1);
+  const precipitationSum = precipitationValues.reduce((acc, precipitation) => acc + precipitation, 0);
+  const roundedPrecipitation = precipitationSum.toFixed(0);
+
+  // Aktualisieren Sie die Diagramm-Untertitel und -Titel
+  myChart.options.plugins.subtitle.text =
+    "T: " +
+    roundedAverage/2 +
+    "° C    N: " +
+    roundedPrecipitation +
+    " mm    " +
+    hoeheData +
+    "m. ü. NN";
+  myChart.options.plugins.title.text = ortData;
+
+  // Aktualisieren Sie die Achsenskalierungen
+  myChart.options.scales.y1.max = 100 + Math.ceil(Math.max(700, ...precipitationData) / 100) * 10;
+  myChart.options.scales.y1.min = -20 + Math.ceil(Math.min(-10, ...temperatureData) / 10) * 2 * 10;
+  myChart.options.scales.y2.max = 100 + Math.ceil(Math.max(700, ...precipitationData) / 100) * 10;
+  myChart.options.scales.y2.min = -20 + Math.ceil(Math.min(-10, ...temperatureData) / 10) * 2 * 10;
+
+  // Aktualisieren Sie das Diagramm mit den neuen Achsenskalierungen
+  myChart.update();
+
+
 }
+
 
 function validateAndParseInput(inputString) {
   // Entfernen von Leerzeichen
