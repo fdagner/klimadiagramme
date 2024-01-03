@@ -22,14 +22,13 @@
         href="https://opendata.dwd.de/climate_environment/CDC/Nutzungsbedingungen_German.pdf">Nutzungsbedingungen</a>
       für Daten im CDC-OpenData-Bereich des deutschen Wetterdienstes.</p>
     <div>
-
+<div style="display:flex;flex-wrap: wrap;gap:5px;">
       <select id="ortAuswahl" size="5" onchange="anzeigenNachOrt()" class="custom-dropdown">
         <option value="" selected>Ort auswählen</option>
       </select>
-
       <input type="text" id="suchfeld" oninput="sucheOrt()" placeholder="Suche nach Ort" class="search-box">
-      <!-- Checkbox für das Ein- und Ausblenden des Orts -->
-      <div style="display:flex;flex-wrap: wrap;gap: 10px;justify-content: space-between;width:400px">
+      </div>
+      <div style="display:flex;flex-wrap: wrap;gap: 5px;justify-content: space-between;width:400px;margin-top: 20px;">
         <label>
           <input type="checkbox" id="showOrtCheckbox" checked onchange="toggleOrtVisibility()"> Ort im Diagramm anzeigen
         </label>
@@ -45,12 +44,12 @@
 
 
     </div>
-    <div style="display:flex;gap:50px">
+    <div style="display:flex;gap:50px;flex-wrap: wrap;">
       <div class="chart-container" style="position: relative; height: 500px; width: 400px">
         <canvas id="precipitationAndTemperatureChart"
           style="position: relative; width: 400px; height: 500px;border: 1px solid silver"></canvas>
       </div>
-      <div id="map" style="position: relative;width: 350px; height: 350px;"></div>
+      <div id="map" style="position: relative;width: 350px; height: 280px;"></div>
     </div>
     <script>
       // Dummy-Daten für die Niederschläge pro Monat und Temperaturen
@@ -279,12 +278,15 @@
       const markerCoordinates = [parseFloat(latData), parseFloat(lonData)]; // Koordinaten in Zahlen umwandeln
 
       // Erstelle die Leaflet-Karte
-      const myMap = L.map("map").setView(markerCoordinates, 2);
+      const myMap = L.map("map",{
+  minZoom: 1,
+  maxZoom: 4, // Du kannst diesen Wert je nach Bedarf anpassen
+}).setView(markerCoordinates, 1);
 
       // Füge die OpenStreetMap-Basiskarte hinzu
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "&copy; OpenStreetMap contributors",
-      }).addTo(myMap);
+      L.tileLayer("js/map/{z}/{x}/{y}.png", {
+  attribution: 'Kartendaten: © <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>-Mitwirkende, SRTM | Kartendarstellung: <a href="https://opentopomap.org/">© OpenTopoMap</a> <a href="https://creativecommons.org/licenses/by-sa/3.0/">(CC-BY-SA)</a>',
+}).addTo(myMap);
 
       // Füge einen Marker mit benutzerdefiniertem Icon hinzu
       const customIcon = L.icon({
@@ -312,7 +314,7 @@
         L.marker(newLatLng, { icon: customIcon }).addTo(myMap);
 
         // Aktualisiere die Karte
-        myMap.setView(newLatLng, 2);
+        myMap.setView(newLatLng, 1);
       }
     </script>
 

@@ -129,7 +129,7 @@ function updateChart() {
 // Funktion zum Laden der CSV-Datei und der Orte
 function ladeOrte() {
   // Pfad zur CSV-Datei
-  var csvDatei = "geodaten.csv";
+  var csvDatei = "data/geodaten.csv";
 
   // XMLHttpRequest, um die CSV-Datei zu laden
   var xhr = new XMLHttpRequest();
