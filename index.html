@@ -4,20 +4,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Klimadiagramm</title>
+  <title>Klimadiagramme</title>
   <link rel="stylesheet" href="css/leaflet.css" />
   <link rel="stylesheet" href="css/style.css" />
   <script src="js/leaflet.js"></script>
   <script src="js/chart.umd.min.js"></script>
   <script src="js/climatedata.js"></script>
   <script src="js/filter.js"></script>
+  <script src="js/manualdata.js"></script>
 </head>
 
 <body>
   <div style="position: relative;width: 100%;max-width: 800px;margin:0 auto">
-    <h1>Klimadiagramme</h1>
-    <p>Durch Auswahl eines Ortes können Sie ein Walter/Lieth-Klimadiagramm erstellen, herunterladen und ohne
-      Einschränkungen weiterverwenden, zum Beispiel im Unterricht. Datenbasis sind momentan Werte der Niederschläge und
+    <h1>Klimadiagramme für Schule und Unterricht</h1>
+    <p>Sie können ein Walter/Lieth-Klimadiagramm erstellen, herunterladen und ohne
+      Einschränkungen weiterverwenden. Datenbasis sind momentan Werte der Niederschläge und
       Temperaturen im Monatsmittel vom Deutschen Wetterdienst aus den Jahren 1961-1990. Beachten Sie die <a
         href="https://opendata.dwd.de/climate_environment/CDC/Nutzungsbedingungen_German.pdf">Nutzungsbedingungen</a>
       für Daten im CDC-OpenData-Bereich des deutschen Wetterdienstes.</p>
@@ -44,12 +45,29 @@
 
 
     </div>
-    <div style="display:flex;gap:50px;flex-wrap: wrap;">
+    <div style="display:flex;gap:30px;flex-wrap: wrap;">
       <div class="chart-container" style="position: relative; height: 500px; width: 400px">
         <canvas id="precipitationAndTemperatureChart"
           style="position: relative; width: 400px; height: 500px;border: 1px solid silver"></canvas>
       </div>
-      <div id="map" style="position: relative;width: 350px; height: 280px;"></div>
+      <div id="map" style="position: relative;width: 360px; height: 280px;"></div>
+      </div>
+        <h2>Daten überschreiben</h2>
+        <p>Sie können die Temperatur- und Niederschlagsdaten im Diagramm manuell überschreiben. Die Skalierung der Achsen wird dabei nicht neu berechnet. 
+          Tragen Sie monatsweise die Daten mit einem Strichpunkt getrennt in die Felder ein.
+          Klicken Sie dann auf "Daten übernehmen".</p><p>Beispiel: "0;3;5;7;8;9;11;14;13;12;8;5" für Jan=0, Feb=3, ... Dez=5.</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 5px;">
+          <label>
+          Temperatur:
+          <input type="text" id="temperatureInput" class="input-field" style="width: 200px">
+        </label>
+        <br></bnr>
+        <label>
+          Niederschlag:
+          <input type="text" id="precipitationInput" class="input-field" style="width: 200px">
+        </label>
+        <button onclick="updateChartData()">Daten übernehmen</button>
+       </div>
     </div>
     <script>
       // Dummy-Daten für die Niederschläge pro Monat und Temperaturen
@@ -165,7 +183,7 @@
             x: {
               ticks: {
                 font: {
-                  size: 14,
+                  size: 16,
                 },
               },
               stacked: true,
@@ -188,8 +206,9 @@
               min: -20 + Math.ceil(Math.min(-10, ...temperatureData) / 10) * 2 * 10,
               max: 100 + Math.ceil(Math.max(700, ...precipitationData) / 100) * 10,
               ticks: {
+                color: '#00B0F0',
                 font: {
-                  size: 14,
+                  size: 16,
                 },
                 stepSize: 10,
                 callback: function (value, index, values) {
@@ -204,7 +223,7 @@
               },
               position: "right",
               title: {
-                display: true,
+                display: false,
                 text: "Niederschläge (mm)",
               },
             },
@@ -215,8 +234,9 @@
               min: -20 + Math.ceil(Math.min(-10, ...temperatureData) / 10) * 2 * 10,
               max: 100 + Math.ceil(Math.max(700, ...precipitationData) / 100) * 10,
               ticks: {
+                color: '#BE4B48',
                 font: {
-                  size: 14,
+                  size: 16,
                 },
                 beginAtZero: true,
                 stepSize: 10,
@@ -229,7 +249,7 @@
                 },
               },
               title: {
-                display: true,
+                display: false,
                 text: "Temperatur (°C)",
               },
               grid: {
