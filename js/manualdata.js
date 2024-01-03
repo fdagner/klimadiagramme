@@ -62,8 +62,10 @@ function updateChartData() {
   myChart.options.scales.y2.min = -20 + Math.ceil(Math.min(-20, ...temperatureValues) / 10) * 10;
 
   // Aktualisieren Sie das Diagramm mit den neuen Achsenskalierungen
-  myChart.update();
 
+ // Hide the x-axis title
+ myChart.options.scales.x.title.display = false;
+  myChart.update();
 
 }
 
