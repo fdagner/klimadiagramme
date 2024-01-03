@@ -56,10 +56,10 @@ function updateChartData() {
   myChart.options.plugins.title.text = ortData;
 
   // Aktualisieren Sie die Achsenskalierungen
-  myChart.options.scales.y1.max = 100 + Math.ceil(Math.max(700, ...precipitationData) / 100) * 10;
-  myChart.options.scales.y1.min = -20 + Math.ceil(Math.min(-10, ...temperatureData) / 10) * 2 * 10;
-  myChart.options.scales.y2.max = 100 + Math.ceil(Math.max(700, ...precipitationData) / 100) * 10;
-  myChart.options.scales.y2.min = -20 + Math.ceil(Math.min(-10, ...temperatureData) / 10) * 2 * 10;
+  myChart.options.scales.y1.max = 100 + Math.ceil(Math.max(700, ...precipitationValues) / 100) * 10;
+  myChart.options.scales.y1.min = -20 + Math.ceil(Math.min(-20, ...temperatureValues) / 10) * 10;
+  myChart.options.scales.y2.max = 100 + Math.ceil(Math.max(700, ...precipitationValues) / 100) * 10;
+  myChart.options.scales.y2.min = -20 + Math.ceil(Math.min(-20, ...temperatureValues) / 10) * 10;
 
   // Aktualisieren Sie das Diagramm mit den neuen Achsenskalierungen
   myChart.update();
@@ -72,10 +72,10 @@ function validateAndParseInput(inputString) {
   // Entfernen von Leerzeichen
   const trimmedInput = inputString.replace(/\s/g, "");
 
-  // Überprüfen, ob es nur numerische Werte enthält
-  if (!/^\d+(\.\d+)?(;\d+(\.\d+)?){11}$/.test(trimmedInput)) {
-    return null;
-  }
+// Überprüfen, ob es nur numerische Werte enthält (positive oder negative)
+if (!/^(-?\d+(\.\d+)?;){11}-?\d+(\.\d+)?$/.test(trimmedInput)) {
+  return null;
+}
 
   const values = trimmedInput
     .split(";")
