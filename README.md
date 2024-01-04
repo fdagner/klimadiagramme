@@ -1,15 +1,21 @@
 # Klimadiagramme für Schule und Unterricht
-Mit dieser Anwendung kann man Walter/Lieth-Klimadiagramme erstellen, herunterladen und frei verwenden. 
-Die Daten basieren auf den monatlichen Niederschlags- und Temperaturwerten des Deutschen Wetterdienstes.
+Mit dieser Anwendung kann man Walter/Lieth-Klimadiagramme erstellen, herunterladen und frei verwenden. Ziel ist es, freie Klimadiagramme bereitzustellen, die besonders für die Sekundarstufe I ab Klasse 5 oder 6 geeignet sind. Die Diagramme sind auf das Wesentliche reduziert, editierbar, schülerfreundlich (Niederschlag als Säulendiagramm) und in deutscher Sprache. Die Daten basieren auf den monatlichen Niederschlags- und Temperaturwerten des Deutschen Wetterdienstes.
 
 ## Screenshot
-<img src="img/screenshot.png" style="width:50%">
+<img src="img/screenshot.png" style="width:75%">
 
-## Ort im Diagramm anzeigen
-Die Anwendung bietet die Möglichkeit, den ausgewählten Ort im Diagramm anzuzeigen. Das kann zum Beispiel für didaktische Szenarien genutzt werden.
+## Referenzzeiträume
+Es stehen zwei Referenzzeiträume zur Verfügung:
+
+    R1: 1961 bis 1990 (2 306 Datensätze, Quelle: DWD)
+    R2: 1991 bis 2020 (1 055 Datensätze, Quelle: DWD, eigene Berechnung)
+
+ <img src="img/screenshot2.png" style="width:75%">  
+
+<i>Diagrammevergleich: links R1 und rechts R2</i>
 
 ## Leaflet | Kartendaten
-Die Anwendung verwendet Leaflet für die Verortung in einer Karte. Die Kartendaten stammen von OpenStreetMap. Die Kartendarstellung erfolgt über OpenTopoMap und unterliegt der Creative Commons Attribution-ShareAlike 3.0 Unported Lizenz (CC-BY-SA).
+Die Anwendung verwendet leafletjs.com für die Verortung in einer Karte. Die Kartendaten stammen von OpenStreetMap. Die Kartendarstellung erfolgt über OpenTopoMap und unterliegt der Creative Commons Attribution-ShareAlike 3.0 Unported Lizenz (CC-BY-SA).
 Das Kartenmaterial wird lokal geladen. Es steht daher nur eine begrenzte Zoommöglichkeit zur Verfügung, die aber ausreichend für die Verortung und eine klimatische Einordnung sein sollte.
 
 ## Manuelle Daten
