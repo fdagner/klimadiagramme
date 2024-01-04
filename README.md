@@ -1,6 +1,6 @@
 # Klimadiagramme für Schule und Unterricht
 Mit dieser Anwendung kann man Walter/Lieth-Klimadiagramme erstellen, herunterladen und frei verwenden. 
-Die Daten basieren auf den monatlichen Niederschlags- und Temperaturwerten des Deutschen Wetterdienstes aus den Jahren 1961-1990 (Referenzzeitraum der Weltorganisation für Meteorologie).
+Die Daten basieren auf den monatlichen Niederschlags- und Temperaturwerten des Deutschen Wetterdienstes.
 
 ## Screenshot
 <img src="img/screenshot.png" style="width:50%">
