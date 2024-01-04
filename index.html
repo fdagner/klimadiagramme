@@ -23,11 +23,8 @@
       <ul>
         <li><b>R1: </b>1961 bis 1990 (2 306 Datensätze, Quelle: DWD)</li>
         <li><b>R2: </b>1991 bis 2020 (1 055 Datensätze, Quelle: DWD, eigene Berechnung)</li>
-      </ul><small>Beachten Sie die <a
-        href="https://opendata.dwd.de/climate_environment/CDC/Nutzungsbedingungen_German.pdf">Nutzungsbedingungen</a>
-      für die Daten im CDC-OpenData-Bereich des deutschen Wetterdienstes.<br>Für eine tiefergehende Analyse von Klimadiagrammen und -daten empfehle ich <a href="https://climatecharts.net/">ClimateCharts.net</a> (Technische Universtität Dresden).</small></p>
-    <div><h2>Klimadiagramm erstellen</h2>
-<div style="display:flex;flex-wrap: wrap;gap:5px;justify-content: center;margin-bottom: 20px">
+      </ul><div><h2>Klimadiagramm erstellen</h2>
+<div style="display:flex;flex-wrap: wrap;gap:5px;justify-content: center;margin-bottom: 10px">
       <select id="ortAuswahl" size="5" onchange="anzeigenNachOrt()" class="custom-dropdown">
         <option value="" selected>Ort auswählen</option>
       </select>
@@ -35,8 +32,8 @@
       </div>
     </div>
     <div style="display:flex;gap:10px;flex-wrap: wrap;justify-content: center">
-      <div style="display:flex;flex-wrap: wrap;width:800px;justify-content: left;margin-top: 20px;">
-        <div style="list-style:none"><b>Anzeige:</b><br><input type="checkbox" id="showOrtCheckbox" checked onchange="toggleOrtVisibility()">Titel
+      <div style="display:flex;flex-wrap: wrap;width:800px;justify-content: left;">
+        <div><br><input type="checkbox" id="showOrtCheckbox" checked onchange="toggleOrtVisibility()">Titel
            <input type="checkbox" id="showSubtitleCheckbox" checked onchange="toggleSubtitleVisibility()">Untertitel
              <input type="checkbox" id="showPrecipitationCheckbox" checked onchange="togglePrecipitationVisibility()">Niederschläge
                <input type="checkbox" id="showTemperatureCheckbox" checked onchange="toggleTemperatureVisibility()">Temperatur
@@ -72,7 +69,10 @@
         <button onclick="updateChartData()">Daten übernehmen</button>
        </div>
 
-       <hr style="margin-top: 55px">
+       <hr style="margin-top: 55px"><small>Beachten Sie die <a
+        href="https://opendata.dwd.de/climate_environment/CDC/Nutzungsbedingungen_German.pdf">Nutzungsbedingungen</a>
+      für die Daten im CDC-OpenData-Bereich des deutschen Wetterdienstes.<br>Für eine tiefergehende Analyse von Klimadiagrammen und -daten empfehle ich <a href="https://climatecharts.net/">ClimateCharts.net</a> (Technische Universtität Dresden).</small></p>
+    
       <small>Der Quellcode sowie Möglichkeiten zur Mitwirkung sind über das <a href="https://github.com/fdagner/klimadiagramme">Repository auf Github</a> zu erreichen.<br><a href="https://github.com/fdagner">fdagner</a> ·  Klimadiagramme für Schule und Unterricht</small> 
     </div>
     <script>
