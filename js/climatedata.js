@@ -32,6 +32,7 @@ function anzeigenNachOrt() {
     hoeheData = datensatz["Hoehenlage"];
     lonData = datensatz["Laengengrad"];
     latData = datensatz["Breitengrad"];
+    refData = datensatz["Referenzzeitraum"];
    
     // Fügen Sie die Niederschlagsdaten in das precipitationData-Array ein
     for (var i = 16; i <= 27; i++) {
@@ -150,18 +151,28 @@ function ladeOrte() {
         }
       }
 
-      // Sortiere das Array nach dem Land
-      geodaten.sort(function (a, b) {
-        var landA = a.Land.toUpperCase(); // Nicht case-sensitive sortieren
-        var landB = b.Land.toUpperCase();
-        if (landA < landB) {
-          return -1;
-        }
-        if (landA > landB) {
-          return 1;
-        }
-        return 0;
-      });
+     // Sortiere das Array nach dem Land und dann nach dem Ort
+     geodaten.sort(function (a, b) {
+      var landA = a.Land.toUpperCase(); // Nicht case-sensitive sortieren
+      var landB = b.Land.toUpperCase();
+      if (landA < landB) {
+        return -1;
+      }
+      if (landA > landB) {
+        return 1;
+      }
+
+      // Wenn die Länder gleich sind, sortiere nach dem Ort
+      var ortA = a.Ort.toUpperCase();
+      var ortB = b.Ort.toUpperCase();
+      if (ortA < ortB) {
+        return -1;
+      }
+      if (ortA > ortB) {
+        return 1;
+      }
+      return 0;
+    });
 
       // Hier können Sie den Code für das Laden der Orte ins Dropdown-Menü implementieren
       var ortAuswahl = document.getElementById("ortAuswahl");
@@ -170,7 +181,7 @@ function ladeOrte() {
       for (var k = 0; k < geodaten.length; k++) {
         var option = document.createElement("option");
         option.value = geodaten[k].ID;
-        option.text = geodaten[k].Land + " - " + geodaten[k].Ort;
+        option.text = geodaten[k].Land + " - " + geodaten[k].Ort + " (" + geodaten[k].Referenzzeitraum + ")";
         ortAuswahl.add(option);
       }
     }

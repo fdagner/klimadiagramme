@@ -18,10 +18,15 @@
   <div style="position: relative;width: 100%;max-width: 800px;margin:0 auto">
     <h1>Klimadiagramme für Schule und Unterricht</h1>
     <p>Sie können ein Walter/Lieth-Klimadiagramm erstellen, herunterladen und ohne
-      Einschränkungen weiterverwenden. Datenbasis sind momentan Werte der Niederschläge und
-      Temperaturen im Monatsmittel vom Deutschen Wetterdienst aus den Jahren 1961-1990. Beachten Sie die <a
+      Einschränkungen weiterverwenden.
+    <p>Es gibt zwei Referenzzeiträume (nach Weltorganisation für Meteorologie):
+      <ul>
+        <li><b>R1: </b>1961 bis 1990 (2 306 Datensätze, Quelle: DWD)</li>
+        <li><b>R2: </b>1991 bis 2020 (1 055 Datensätze, Quelle: DWD, eigene Berechnung)</li>
+      </ul>
+       Beachten Sie die <a
         href="https://opendata.dwd.de/climate_environment/CDC/Nutzungsbedingungen_German.pdf">Nutzungsbedingungen</a>
-      für Daten im CDC-OpenData-Bereich des deutschen Wetterdienstes.</p>
+      für die Daten im CDC-OpenData-Bereich des deutschen Wetterdienstes.</p>
     <div>
 <div style="display:flex;flex-wrap: wrap;gap:5px;">
       <select id="ortAuswahl" size="5" onchange="anzeigenNachOrt()" class="custom-dropdown">
@@ -312,7 +317,7 @@
       const customIcon = L.icon({
         iconUrl: 'img/ts-map-pin.svg',
         iconSize: [32, 32], // Größe des Icons in Pixel
-        iconAnchor: [16, 16], // Position des Ankers relativ zur Icon-Position
+        iconAnchor: [16, 28], // Position des Ankers relativ zur Icon-Position
       });
 
       // Füge den Marker hinzu
