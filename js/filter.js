@@ -31,10 +31,58 @@ function toggleOrtVisibility() {
   const isOrtVisible = showOrtCheckbox.checked;
 
   if (isOrtVisible) {
-    myChart.options.plugins.title.text = ortData;
+    myChart.options.plugins.title.display = true;
   } else {
-    myChart.options.plugins.title.text = ""; // Leer, um den Text zu verbergen
+    myChart.options.plugins.title.display = false;
   }
 
+  myChart.update();
+}
+
+function toggleSubtitleVisibility() {
+  const showSubtitleCheckbox = document.getElementById("showSubtitleCheckbox");
+  const isSubtitleVisible = showSubtitleCheckbox.checked;
+
+  if (isSubtitleVisible) {
+    myChart.options.plugins.subtitle.display = true;
+  } else {
+    myChart.options.plugins.subtitle.display = false;
+  }
+
+  myChart.update();
+}
+
+function togglePrecipitationVisibility() {
+  const showPrecipitationCheckbox = document.getElementById(
+    "showPrecipitationCheckbox"
+  );
+  const isPrecipitationVisible = showPrecipitationCheckbox.checked;
+
+  const precipitationDataset = myChart.data.datasets[1];
+  const precipitationDataset2 = myChart.data.datasets[2];
+
+  if (isPrecipitationVisible) {
+    precipitationDataset.hidden = false;
+    precipitationDataset2.hidden = false;
+  } else {
+    precipitationDataset.hidden = true;
+    precipitationDataset2.hidden = true;
+  }
+  myChart.update();
+}
+
+function toggleTemperatureVisibility() {
+  const showTemperatureCheckbox = document.getElementById(
+    "showTemperatureCheckbox"
+  );
+  const isTemperatureVisible = showTemperatureCheckbox.checked;
+
+  const temperatureDataset = myChart.data.datasets[0];
+
+  if (isTemperatureVisible) {
+    temperatureDataset.hidden = false;
+  } else {
+    temperatureDataset.hidden = true;
+  }
   myChart.update();
 }
