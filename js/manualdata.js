@@ -38,46 +38,54 @@ function updateChartData() {
   myChart.update();
 
   // Berechnen Sie die neuen Werte für den Durchschnitt und die Summe
-  const temperatureSum = temperatureValues.reduce((acc, temperature) => acc + temperature, 0);
+  const temperatureSum = temperatureValues.reduce(
+    (acc, temperature) => acc + temperature,
+    0
+  );
   const temperatureAverage = temperatureSum / temperatureData.length;
   const roundedAverage = temperatureAverage.toFixed(1);
-  const precipitationSum = precipitationValues.reduce((acc, precipitation) => acc + precipitation, 0);
+  const precipitationSum = precipitationValues.reduce(
+    (acc, precipitation) => acc + precipitation,
+    0
+  );
   const roundedPrecipitation = precipitationSum.toFixed(0);
 
   // Aktualisieren Sie die Diagramm-Untertitel und -Titel
   myChart.options.plugins.subtitle.text =
     "T: " +
-    roundedAverage/2 +
+    roundedAverage / 2 +
     "° C    N: " +
     roundedPrecipitation +
     " mm    " +
     hoeheData +
-    "m. ü. NN";
+    " m. ü. NN";
   myChart.options.plugins.title.text = ortData;
 
   // Aktualisieren Sie die Achsenskalierungen
-  myChart.options.scales.y1.max = 100 + Math.ceil(Math.max(700, ...precipitationValues) / 100) * 10;
-  myChart.options.scales.y1.min = -20 + Math.ceil(Math.min(-20, ...temperatureValues) / 10) * 10;
-  myChart.options.scales.y2.max = 100 + Math.ceil(Math.max(700, ...precipitationValues) / 100) * 10;
-  myChart.options.scales.y2.min = -20 + Math.ceil(Math.min(-20, ...temperatureValues) / 10) * 10;
+  myChart.options.scales.y1.max =
+    100 + Math.ceil(Math.max(700, ...precipitationValues) / 100) * 10;
+  myChart.options.scales.y1.min =
+    -20 + Math.ceil(Math.min(-20, ...temperatureValues) / 10) * 10;
+  myChart.options.scales.y2.max =
+    100 + Math.ceil(Math.max(700, ...precipitationValues) / 100) * 10;
+  myChart.options.scales.y2.min =
+    -20 + Math.ceil(Math.min(-20, ...temperatureValues) / 10) * 10;
 
   // Aktualisieren Sie das Diagramm mit den neuen Achsenskalierungen
 
- // Hide the x-axis title
- myChart.options.scales.x.title.display = false;
+  // Hide the x-axis title
+  myChart.options.scales.x.title.display = false;
   myChart.update();
-
 }
-
 
 function validateAndParseInput(inputString) {
   // Entfernen von Leerzeichen
   const trimmedInput = inputString.replace(/\s/g, "");
 
-// Überprüfen, ob es nur numerische Werte enthält (positive oder negative)
-if (!/^(-?\d+(\.\d+)?;){11}-?\d+(\.\d+)?$/.test(trimmedInput)) {
-  return null;
-}
+  // Überprüfen, ob es nur numerische Werte enthält (positive oder negative)
+  if (!/^(-?\d+(\.\d+)?;){11}-?\d+(\.\d+)?$/.test(trimmedInput)) {
+    return null;
+  }
 
   const values = trimmedInput
     .split(";")
