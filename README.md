@@ -14,6 +14,9 @@ Es stehen zwei Referenzzeiträume zur Verfügung:
 
 <i>Diagrammevergleich: links R1 und rechts R2</i>
 
+<img src="img/johannesburg.png" style="width:25%">
+<i>Die zwei üblichen Diagrammarten stehen zur Verfügung. Der Hintergrund kann nach dem Herunterladen leicht in allen Programmen nachbarbeitet werden.</i>
+
 ## Leaflet | Kartendaten
 Die Anwendung verwendet leafletjs.com für die Verortung in einer Karte. Die Kartendaten stammen von OpenStreetMap. Die Kartendarstellung erfolgt über OpenTopoMap und unterliegt der Creative Commons Attribution-ShareAlike 3.0 Unported Lizenz (CC-BY-SA).
 Das Kartenmaterial wird lokal geladen. Es steht daher nur eine begrenzte Zoommöglichkeit zur Verfügung, die aber ausreichend für die Verortung und eine klimatische Einordnung sein sollte.
