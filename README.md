@@ -10,11 +10,12 @@ Es stehen zwei Referenzzeiträume zur Verfügung:
     R1: 1961 bis 1990 (2 306 Datensätze, Quelle: DWD)
     R2: 1991 bis 2020 (1 055 Datensätze, Quelle: DWD, eigene Berechnung)
 
- <img src="img/screenshot2.png" style="width:75%">  
+ <img src="img/pecs_pogany.png" style="width:75%">  
 
 <i>Diagrammevergleich: links R1 und rechts R2</i>
 
-<img src="img/johannesburg.png" style="width:25%">
+<img src="img/screenshot3.png" style="width:25%">
+
 <i>Die zwei üblichen Diagrammarten stehen zur Verfügung. Der Hintergrund kann nach dem Herunterladen leicht in allen Programmen nachbarbeitet werden.</i>
 
 ## Leaflet | Kartendaten
