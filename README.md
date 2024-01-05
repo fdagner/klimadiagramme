@@ -2,7 +2,7 @@
 Mit dieser Anwendung kann man Walter/Lieth-Klimadiagramme erstellen, herunterladen und frei verwenden. Ziel ist es, freie Klimadiagramme bereitzustellen, die besonders für die Sekundarstufe I ab Klasse 5 oder 6 geeignet sind. Die Diagramme sind auf das Wesentliche reduziert, editierbar, schülerfreundlich (Niederschlag als Säulendiagramm) und in deutscher Sprache. Die Daten basieren auf den monatlichen Niederschlags- und Temperaturwerten des Deutschen Wetterdienstes.
 
 ## Screenshot
-<img src="img/screenshot5.png" style="width:75%">
+<img src="img/screenshot5.png" style="width:75 %">
 
 ## Referenzzeiträume
 Es stehen zwei Referenzzeiträume zur Verfügung:
@@ -10,11 +10,11 @@ Es stehen zwei Referenzzeiträume zur Verfügung:
     R1: 1961 bis 1990 (2 306 Datensätze, Quelle: DWD)
     R2: 1991 bis 2020 (1 055 Datensätze, Quelle: DWD, eigene Berechnung)
 
- <img src="img/example.png" style="width:75%">  
+ <img src="img/example.png" style="width:75 %">  
 
 <i>Diagrammevergleich: links R1 und rechts R2</i>
 
-<img src="img/screenshot4.png" style="width:75%">
+<img src="img/screenshot4.png" style="width:75 %">
 
 <i>Die zwei üblichen Diagrammarten stehen zur Verfügung. Der Hintergrund kann nach dem Herunterladen leicht in allen Programmen nachbarbeitet werden.</i>
 
