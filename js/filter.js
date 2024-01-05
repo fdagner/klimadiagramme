@@ -58,15 +58,29 @@ function togglePrecipitationVisibility() {
   );
   const isPrecipitationVisible = showPrecipitationCheckbox.checked;
 
-  const precipitationDataset = myChart.data.datasets[1];
+  const precipitationDataset1 = myChart.data.datasets[1];
   const precipitationDataset2 = myChart.data.datasets[2];
+  const precipitationDataset3 = myChart.data.datasets[4];
+  const precipitationDataset4 = myChart.data.datasets[5];
 
   if (isPrecipitationVisible) {
-    precipitationDataset.hidden = false;
-    precipitationDataset2.hidden = false;
+    precipitationDataset1.fill = {
+      target: "-1",
+      above: "rgba(0,176,240,0.75)", // Area will be red above the origin
+    };
+    precipitationDataset2.borderWidth = 3;
+    precipitationDataset2.fill = {
+      target: "-1",
+      above: "rgba(64,105,156,0.75)",
+    };
+    precipitationDataset3.backgroundColor = "#00B0F0";
+    precipitationDataset4.backgroundColor = "#40699C";
   } else {
-    precipitationDataset.hidden = true;
-    precipitationDataset2.hidden = true;
+    precipitationDataset1.fill = false;
+    precipitationDataset2.borderWidth = 0;
+    precipitationDataset2.fill = false;
+    precipitationDataset3.backgroundColor = "transparent";
+    precipitationDataset4.backgroundColor = "transparent";
   }
   myChart.update();
 }
@@ -77,12 +91,20 @@ function toggleTemperatureVisibility() {
   );
   const isTemperatureVisible = showTemperatureCheckbox.checked;
 
-  const temperatureDataset = myChart.data.datasets[0];
+  const temperatureDataset1 = myChart.data.datasets[0];
+  const temperatureDataset2 = myChart.data.datasets[3];
 
   if (isTemperatureVisible) {
-    temperatureDataset.hidden = false;
+    temperatureDataset1.borderWidth = 3;
+    temperatureDataset2.borderWidth = 3;
+    temperatureDataset1.fill = {
+      target: "1",
+      above: "rgba(255, 252, 127, 0.75)", // Area will be red above the origin
+    };
   } else {
-    temperatureDataset.hidden = true;
+    temperatureDataset1.borderWidth = 0;
+    temperatureDataset2.borderWidth = 0;
+    temperatureDataset1.fill = false;
   }
   myChart.update();
 }

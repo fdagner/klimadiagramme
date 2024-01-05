@@ -2,8 +2,8 @@ var geodaten = []; // Das Array, um die CSV-Daten zu speichern
 var myChart; // Das Diagrammobjekt
 let ortData = "Musterhausen";
 let hoeheData = "300";
-let lonData = "10";
-let latData = "40";
+let lonData = "0";
+let latData = "0";
 // Funktion zum Aktualisieren des Dateinamens basierend auf dem aktuellen Ort
 function updateFileName() {
   // Entferne alle Punkte und Sonderzeichen aus dem Ort
@@ -70,7 +70,7 @@ function anzeigenNachOrt() {
     );
 
     const temperatureAverage = temperatureSum / temperatureData.length;
-    const roundedAverage = temperatureAverage.toFixed(1);
+    const roundedAverage = parseFloat(temperatureAverage.toFixed(1));
     const precipitationSum = precipitationData.reduce(
       (acc, precipitation) => acc + precipitation,
       0
@@ -99,8 +99,9 @@ function anzeigenNachOrt() {
       (myChart.options.scales.x.title.display = true);
     updateChart();
     updateFileName();
-
     updateLeafletMap();
+    setValuesInInputFields();
+    setData();
   } else {
     console.error("Datensatz für ausgewählten Ort nicht gefunden.");
   }
@@ -115,9 +116,18 @@ function updateChart() {
     (value) => Math.max(0, value - 100) / 10
   );
   config.data.datasets[0].data = temperatureData.map((value) => value * 2);
+  config.data.datasets[3].data = temperatureData.map((value) => value * 2);
+  config.data.datasets[4].data = precipitationData.map((value) =>
+    Math.min(value, 100)
+  );
+  config.data.datasets[5].data = precipitationData.map(
+    (value) => Math.max(0, value - 100) / 10
+  );
+
   myChart.update();
   updateFileName();
 }
+
 // Funktion zum Laden der CSV-Datei und der Orte
 function ladeOrte() {
   // Pfad zur CSV-Datei
@@ -196,7 +206,25 @@ function ladeOrte() {
   xhr.send();
 }
 
-// Lade die Orte beim Laden der Seite
-window.onload = function () {
+// Funktion zum Setzen der Beispiel-Daten in die Input-Felder
+function setData() {
+  document.getElementById("ortInput").value = ortData;
+  document.getElementById("hoeheInput").value = hoeheData;
+}
+
+function setValuesInInputFields() {
+  // Temperaturen in Zeichenkette mit Strichpunkt statt Komma umwandeln
+  const temperatureString = temperatureData.join(";");
+  // Niederschläge in Zeichenkette mit Strichpunkt statt Komma umwandeln
+  const precipitationString = precipitationData.join(";");
+
+  // Setze die Werte in die Input-Felder
+  document.getElementById("temperatureInput").value = temperatureString;
+  document.getElementById("precipitationInput").value = precipitationString;
+}
+
+document.addEventListener("DOMContentLoaded", function () {
   ladeOrte();
-};
+  setValuesInInputFields();
+  setData();
+});

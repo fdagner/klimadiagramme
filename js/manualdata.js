@@ -3,6 +3,30 @@ function updateChartData() {
   const temperatureInput = document.getElementById("temperatureInput").value;
   const precipitationInput =
     document.getElementById("precipitationInput").value;
+  const ortInput = document.getElementById("ortInput").value;
+  const hoeheInput = document.getElementById("hoeheInput").value;
+
+  // Validierung für Ort und Höhe
+  if (
+    (ortInput.trim() !== "" &&
+      !/^[a-zA-Z0-9\süöäßÜÖÄ.,'"`()/\-]*$/.test(ortInput)) ||
+    ortInput.length > 30
+  ) {
+    alert(
+      "Ungültiger Wert für Ort. Erlaubt sind nur Buchstaben, Zahlen und Leerzeichen. Nicht länger als 30 Zeichen."
+    );
+    return;
+  }
+
+  if (
+    hoeheInput.trim() !== "" &&
+    (!/^\d+$/.test(hoeheInput) || hoeheInput.length > 8)
+  ) {
+    alert(
+      "Ungültiger Wert für Höhe. Erlaubt sind nur Zahlen. Nicht länger als 8 Zeichen."
+    );
+    return;
+  }
 
   // Validierung der Benutzereingaben
   const validTemperatureValues = validateAndParseInput(temperatureInput);
@@ -31,8 +55,13 @@ function updateChartData() {
 
   // Übernehmen der neuen Daten in das Diagramm
   myChart.data.datasets[0].data = temperatureValues;
+  myChart.data.datasets[3].data = temperatureValues;
   myChart.data.datasets[1].data = chartPrecipitationData1;
   myChart.data.datasets[2].data = chartPrecipitationData2;
+  myChart.data.datasets[4].data = chartPrecipitationData1;
+  myChart.data.datasets[5].data = chartPrecipitationData2;
+  hoeheData = hoeheInput;
+  ortData = ortInput;
 
   // Aktualisieren Sie das Diagramm mit den neuen Daten
   myChart.update();
@@ -43,7 +72,8 @@ function updateChartData() {
     0
   );
   const temperatureAverage = temperatureSum / temperatureData.length;
-  const roundedAverage = temperatureAverage.toFixed(1);
+  const roundedAverageHalf = temperatureAverage / 2;
+  const roundedAverage = parseFloat(roundedAverageHalf.toFixed(1));
   const precipitationSum = precipitationValues.reduce(
     (acc, precipitation) => acc + precipitation,
     0
@@ -53,7 +83,7 @@ function updateChartData() {
   // Aktualisieren Sie die Diagramm-Untertitel und -Titel
   myChart.options.plugins.subtitle.text =
     "T: " +
-    roundedAverage / 2 +
+    roundedAverage +
     "° C    N: " +
     roundedPrecipitation +
     " mm    " +
