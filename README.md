@@ -10,17 +10,13 @@ Es stehen zwei Referenzzeiträume zur Verfügung:
     R1: 1961 bis 1990 (2 306 Datensätze, Quelle: DWD)
     R2: 1991 bis 2020 (1 055 Datensätze, Quelle: DWD, eigene Berechnung)
 
- <img src="img/pecs_pogany.png" style="width:75%">  
+ <img src="img/example.png" style="width:75%">  
 
 <i>Diagrammevergleich: links R1 und rechts R2</i>
 
-<img src="img/screenshot3.png" style="width:25%">
+<img src="img/screenshot4.png" style="width:75%">
 
 <i>Die zwei üblichen Diagrammarten stehen zur Verfügung. Der Hintergrund kann nach dem Herunterladen leicht in allen Programmen nachbarbeitet werden.</i>
-
-## Leaflet | Kartendaten
-Die Anwendung verwendet leafletjs.com für die Verortung in einer Karte. Die Kartendaten stammen von OpenStreetMap. Die Kartendarstellung erfolgt über OpenTopoMap und unterliegt der Creative Commons Attribution-ShareAlike 3.0 Unported Lizenz (CC-BY-SA).
-Das Kartenmaterial wird lokal geladen. Es steht daher nur eine begrenzte Zoommöglichkeit zur Verfügung, die aber ausreichend für die Verortung und eine klimatische Einordnung sein sollte.
 
 ## Manuelle Daten
 Es gibt die Möglichkeit, die Temperatur- und Niederschlagsdaten im Diagramm manuell zu überschreiben. 
