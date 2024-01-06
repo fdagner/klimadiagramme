@@ -162,7 +162,7 @@ body {
     display: block;
 }
 
-@media only screen and (max-height:480px) and (orientation:portrait) { 
+@media only screen and (max-width:600px) { 
   .custom-dropdown
    { 
      size: 10;
