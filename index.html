@@ -1,109 +1,129 @@
 <!DOCTYPE html>
 <html lang="de">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Klimadiagramme</title>
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/style.css">
+        <script src="js/leaflet.js"></script>
+        <script src="js/chart.umd.min.js"></script>
+        <script src="js/climatedata.js"></script>
+        <script src="js/filter.js"></script>
+        <script src="js/manualdata.js"></script>
+    </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Klimadiagramme</title>
-  <link rel="stylesheet" href="css/leaflet.css" />
-  <link rel="stylesheet" href="css/style.css" />
-  <script src="js/leaflet.js"></script>
-  <script src="js/chart.umd.min.js"></script>
-  <script src="js/climatedata.js"></script>
-  <script src="js/filter.js"></script>
-  <script src="js/manualdata.js"></script>
-</head>
+    <body>
+        <div style="position: relative; width: 100%; max-width: 800px; margin: 0 auto;">
+            <h1>Klimadiagramme für Schule und Unterricht</h1>
+            <p style="text-align: justify;">
+                <b>
+                    Sie können Klimadiagramme nach Walter/Lieth herunterladen und uneingeschränkt weiterverwenden. Die Diagramme im Downloadformat PNG sind unter der Creative-Commons-Lizenz
+                    <a href="https://creativecommons.org/publicdomain/zero/1.0/deed.de">CC0 1.0</a> lizenziert. Die Intention dieses Projekts ist es, freie Klimadiagramme für den Unterricht zur Verfügung zu stellen, die vor allem ab
+                    Sekundarstufe I geeignet sind. Die Diagramme sind auf das Wesentliche reduziert, editierbar, schülerfreundlich und in deutscher Sprache.
+                </b>
+            </p>
 
-<body>
-  <div style="position: relative;width: 100%;max-width: 800px;margin:0 auto">
-    <h1>Klimadiagramme für Schule und Unterricht</h1>
-    <p style="text-align: justify"><b>Sie können Klimadiagramme nach Walter/Lieth herunterladen und
-        uneingeschränkt weiterverwenden. Die Diagramme im Downloadformat PNG sind unter der Creative-Commons-Lizenz <a href="https://creativecommons.org/publicdomain/zero/1.0/deed.de">CC0 1.0</a> lizenziert. Die Intention dieses Projekts ist es, freie Klimadiagramme für den Unterricht
-        zur Verfügung zu stellen, die vor allem für die Sekundarstufe I ab Klasse 5 geeignet sind.
-        Die Diagramme sind auf das Wesentliche reduziert, editierbar, schülerfreundlich und in deutscher Sprache.</b>
-    <p>Es gibt zwei Referenzzeiträume (gemäß Weltorganisation für Meteorologie):
-    <ul>
-      <li><b>R1: </b>1961 bis 1990 (2 306 Datensätze, Datenbasis: <i>Deutscher Wetterdienst</i>)</li>
-      <li><b>R2: </b>1991 bis 2020 (1 055 Datensätze, Datenbasis: <i>Deutscher Wetterdienst</i>, eigene Berechnung)</li>
-    </ul>
-    <div>
-      <h2>Klimadiagramm erstellen</h2>
-      <div style="display:flex;flex-wrap: wrap;gap:5px;justify-content: left;margin-bottom: 10px">
-        <div><select id="ortAuswahl" size="5" onchange="anzeigenNachOrt()" class="custom-dropdown">
-            <option value="" selected>Station auswählen</option>
-          </select></div>
-        <div>
-          <input type="text" id="suchfeld" oninput="sucheOrt()" placeholder="Auswahlliste filtern" class="search-box">
+            <p>Es gibt zwei Referenzzeiträume (gemäß Weltorganisation für Meteorologie):</p>
+            <ul>
+                <li><b>R1: </b>1961 bis 1990 (2 306 Datensätze, Datenbasis: <i>Deutscher Wetterdienst</i>)</li>
+                <li><b>R2: </b>1991 bis 2020 (1 055 Datensätze, Datenbasis: <i>Deutscher Wetterdienst</i>, eigene Berechnung)</li>
+            </ul>
+            <div>
+                <h2>Klimadiagramm erstellen</h2>
+                <div style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: left; margin-bottom: 10px;">
+                    <div>
+                        <select id="ortAuswahl" size="10" onchange="anzeigenNachOrt()" class="custom-dropdown">
+                            <option value="" selected>Station auswählen</option>
+                        </select>
+                    </div>
+                    <div>
+                        <input type="text" id="suchfeld" oninput="sucheOrt()" placeholder="Auswahlliste filtern" class="search-box">
+                    </div>
+                </div>
+                <div style="display: flex; gap: 25px; flex-wrap: wrap; justify-content: center;">
+                    <div class="chart-container" style="position: relative; height: 500px; width: 350px;">
+                        <canvas id="precipitationAndTemperatureChart" style="position: relative; width: 350px; height: 500px; border: 1px solid silver;"></canvas>
+                    </div>
+                    <div id="map" style="position: relative; width: 360px; height: 280px;"></div>
+                    <div style="border: 0px solid #ff4800; width: 100%; padding: 8px;">
+                        <input type="checkbox" id="showOrtCheckbox" checked onchange="toggleOrtVisibility()">Titel <input type="checkbox" id="showSubtitleCheckbox" checked onchange="toggleSubtitleVisibility()">Untertitel
+                        <input type="checkbox" id="showPrecipitationCheckbox" checked onchange="togglePrecipitationVisibility()">Niederschläge
+                        <input type="checkbox" id="showTemperatureCheckbox" checked onchange="toggleTemperatureVisibility()">Temperatur<br>
+                        <br>
+                        Diagrammart:
+                        <label class="switch">
+                            <input type="checkbox" onclick="toggleData()" checked>
+                            <span class="slider round"></span>
+                        </label>
+                        Farbe:
+                        <input type="color" id="colorPicker" value="#ffffff">
+                    </div>
+                    <div style="display: flex; flex-wrap: wrap; width: 800px; justify-content: space-between;">
+                        <div></div>
+                        <div style="width: 375px; text-align: right;">
+                            <button id="downloadButton" onclick="downloadChart()">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="16" viewBox="0 0 512 512">
+                                    <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                                    <path
+                                        fill="white"
+                                        d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z" /></svg>
+                                PNG herunterladen
+                            </button>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+
+                <h2>Daten überschreiben</h2>
+                <p>
+                    Sie können Daten im Diagramm manuell überschreiben. Titel und Höhe dürfen auch leer sein. Bearbeiten Sie monatsweise die mit einem Strichpunkt getrennten Niederschlags- und Temperaturdaten. Klicken Sie dann auf "Daten
+                    übernehmen".
+                </p>
+                <p>
+                    <i>
+                        Beispiel:<br>
+                        "0;3;5;7;8;9;11;14;13;12;8;5" (Für Jan=0, Feb=3, ..., Dez=5.)
+                    </i>
+                </p>
+                <div style="display: flex; flex-direction: column; flex-wrap: wrap; gap: 5px;">
+                    <label>
+                        Titel:
+                        <input type="text" id="ortInput" class="input-field" style="width: 100%;">
+                    </label>
+                    <label>
+                        Höhe in m. ü. NN:
+                        <input type="text" id="hoeheInput" class="input-field" style="width: 100%;">
+                    </label>
+                    <label>
+                        Temperatur:
+                        <input type="text" id="temperatureInput" class="input-field" style="width: 100%;">
+                    </label>
+                    <label>
+                        Niederschlag:
+                        <input type="text" id="precipitationInput" class="input-field" style="width: 100%;">
+                    </label>
+                    <button onclick="updateChartData()" style="width: 200px;">Daten übernehmen</button>
+                </div>
+            </div>
+
+            <hr style="margin-top: 55px;">
+            <p>
+                <small>
+                    Beachten Sie die <a href="https://opendata.dwd.de/climate_environment/CDC/Nutzungsbedingungen_German.pdf">Nutzungsbedingungen</a> für die Daten im CDC-OpenData-Bereich des deutschen Wetterdienstes.<br>
+                    Für eine tiefergehende Analyse von Klimadiagrammen und -daten empfehle ich <a href="https://climatecharts.net/">ClimateCharts.net</a> (Technische Universtität Dresden).
+                </small>
+            </p>
+
+            <p>
+                <small>
+                    Der Quellcode sowie Möglichkeiten zur Mitwirkung sind über das <a href="https://github.com/fdagner/klimadiagramme">Repository auf Github</a> zu erreichen.<br>
+                    <a href="https://github.com/fdagner">fdagner</a> · Klimadiagramme für Schule und Unterricht
+                </small>
+            </p>
         </div>
-      </div>
-      <div style="display:flex;gap:25px;flex-wrap: wrap;justify-content: center">
-        <div class="chart-container" style="position: relative; height: 500px; width: 350px">
-          <canvas id="precipitationAndTemperatureChart"
-            style="position: relative; width: 350px; height: 500px;border: 1px solid silver"></canvas>
-        </div>
-        <div id="map" style="position: relative;width: 360px; height: 280px;"></div>
-        <div>
-          <input type="checkbox" id="showOrtCheckbox" checked onchange="toggleOrtVisibility()">Titel
-          <input type="checkbox" id="showSubtitleCheckbox" checked onchange="toggleSubtitleVisibility()">Untertitel
-          <input type="checkbox" id="showPrecipitationCheckbox" checked
-            onchange="togglePrecipitationVisibility()">Niederschläge
-          <input type="checkbox" id="showTemperatureCheckbox" checked
-            onchange="toggleTemperatureVisibility()">Temperatur
-        </div>
-        <div style="display:flex;flex-wrap: wrap;width:800px;justify-content: space-between;">
-          <div>
-            Diagrammart:
-            <label class="switch">
-              <input type="checkbox" onclick="toggleData()" checked>
-              <span class="slider round"></span>
-            </label>
-          </div>
-          <div style="width:375px;text-align:right"><button id="downloadButton" onclick="downloadChart()">
-              <div><svg xmlns="http://www.w3.org/2000/svg" height="16" width="16"
-                  viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-                  <path fill="white"
-                    d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z" />
-                </svg> PNG herunterladen</button><br></div>
-        </div>
-      </div>
-
-      <h2>Daten überschreiben</h2>
-      <p>Sie können Daten im Diagramm manuell überschreiben. Titel und Höhe dürfen auch leer sein. Bearbeiten Sie monatsweise die mit einem Strichpunkt getrennten Niederschlags- und Temperaturdaten.
-        Klicken Sie dann auf "Daten übernehmen".</p>
-      <p><i>Beispiel:<br>"0;3;5;7;8;9;11;14;13;12;8;5" (Für Jan=0, Feb=3, ..., Dez=5.)</i></p>
-      <div style="display: flex; flex-direction:column; flex-wrap: wrap; gap: 5px;">
-        <label>
-          Titel:
-          <input type="text" id="ortInput" class="input-field" style="width: 100%">
-        </label>
-        <label>
-          Höhe in m. ü. NN:
-          <input type="text" id="hoeheInput" class="input-field" style="width: 100%">
-        </label>
-        <label>
-          Temperatur:
-          <input type="text" id="temperatureInput" class="input-field" style="width: 100%">
-        </label>
-        <label>
-          Niederschlag:
-          <input type="text" id="precipitationInput" class="input-field" style="width: 100%">
-        </label>
-        <button onclick="updateChartData()" style="width: 200px;">Daten übernehmen</button>
-      </div>
-
-      <hr style="margin-top: 55px"><small>Beachten Sie die <a
-          href="https://opendata.dwd.de/climate_environment/CDC/Nutzungsbedingungen_German.pdf">Nutzungsbedingungen</a>
-        für die Daten im CDC-OpenData-Bereich des deutschen Wetterdienstes.<br>Für eine tiefergehende Analyse von
-        Klimadiagrammen und -daten empfehle ich <a href="https://climatecharts.net/">ClimateCharts.net</a> (Technische
-        Universtität Dresden).</small></p>
-
-      <small>Der Quellcode sowie Möglichkeiten zur Mitwirkung sind über das <a
-          href="https://github.com/fdagner/klimadiagramme">Repository auf Github</a> zu erreichen.<br><a
-          href="https://github.com/fdagner">fdagner</a> · Klimadiagramme für Schule und Unterricht</small>
-    </div>
-    <script src="js/chart.js"></script>
-    <script src="js/map.js"></script>
-
-</body>
-
+        <script src="js/chart.js"></script>
+        <script src="js/map.js"></script>
+    </body>
 </html>
+

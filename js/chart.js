@@ -1,32 +1,54 @@
-// Dummy-Daten für die Niederschläge pro Monat und Temperaturen
+// Dummy data for precipitation per month and temperatures
 const precipitationData = [
   110, 180, 120, 60, 10, 10, 10, 10, 60, 110, 130, 120,
 ];
 const temperatureData = [-10, -5, -2, 4, 10, 15, 16, 15, 10, 5, 0, -5];
 
-// Summe der Temperaturdaten berechnen
+// Calculate the sum of the temperature data
 const temperatureSum = temperatureData.reduce(
   (acc, temperature) => acc + temperature,
   0
 );
 
-// Mittelwert berechnen
+// Calculate mean value
 const temperatureAverage = temperatureSum / temperatureData.length;
 const roundedAverage = parseFloat(temperatureAverage.toFixed(1));
 
-// Summe der Niederschläge berechnen
+// Calculate the sum of precipitation
 const precipitationSum = precipitationData.reduce(
   (acc, precipitation) => acc + precipitation,
   0
 );
 const roundedPrecipitation = precipitationSum.toFixed(0);
 
-// Funktion zum Anpassen der Farbe basierend auf dem Niederschlagswert
+// Function for adjusting the colour based on the precipitation value
 function getColor(value) {
   return value <= 100 ? "#00B0F0" : "#40699C";
 }
+// Note: changes to the plugin code is not reflected to the chart, because the plugin is loaded at chart construction time and editor changes only trigger an chart.update().
+const plugin = {
+  id: 'customCanvasBackgroundColor',
+  options: {
+    color: 'white', // Set the default color
+  },
+  beforeDraw: (myChart, args) => {
+    const { ctx } = myChart;
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-over';
+    ctx.fillStyle = plugin.options.color || '#99ffff';
+    ctx.fillRect(0, 0, myChart.width, myChart.height);
+    ctx.restore();
+  }
+};
 
-// Konfiguration für das Diagramm
+const colorPicker = document.getElementById('colorPicker');
+
+colorPicker.addEventListener('input', function () {
+  plugin.options.color = this.value;
+  myChart.update();
+});
+
+// Configuration for the diagram
 const config = {
   data: {
     labels: ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"],
@@ -50,7 +72,7 @@ const config = {
         label: "Niederschläge (mm)",
         type: "line",
         hidden: true,
-        data: precipitationData.map((value) => Math.min(value, 100)), // Begrenze den Wert bis 100
+        data: precipitationData.map((value) => Math.min(value, 100)), // Limit the value to 100
         lineTension: 0,
         pointRadius: 0,
         borderWidth: 0,
@@ -65,7 +87,7 @@ const config = {
         label: "Niederschläge (mm)",
         type: "line",
         hidden: true,
-        data: precipitationData.map((value) => Math.max(0, value - 100) / 10), // Rest ab 100
+        data: precipitationData.map((value) => Math.max(0, value - 100) / 10), // Rest from 100
         lineTension: 0,
         pointRadius: 0,
         borderColor: "#40699C",
@@ -92,7 +114,7 @@ const config = {
         label: "Pre1",
         type: "bar",
         hidden: false,
-        data: precipitationData.map((value) => Math.min(value, 100)), // Begrenze den Wert bis 100
+        data: precipitationData.map((value) => Math.min(value, 100)), // Limit the value to 100
         backgroundColor: "#00B0F0",
         stack: "stack1",
         yAxisID: "y1",
@@ -101,7 +123,7 @@ const config = {
         label: "Pre2",
         type: "bar",
         hidden: false,
-        data: precipitationData.map((value) => Math.max(0, value - 100) / 10), // Rest ab 100
+        data: precipitationData.map((value) => Math.max(0, value - 100) / 10), // Rest from 100
         backgroundColor: "#40699C",
         stack: "stack1",
         yAxisID: "y1",
@@ -114,10 +136,16 @@ const config = {
     },
     responsive: true,
     plugins: {
-      tooltip: {
+        customCanvasBackgroundColor: {
+          color: 'white',
+        },
+        tooltip: {
         enabled: false,
       },
       subtitle: {
+        padding: {
+          bottom: 10,
+        },
         display: true,
         color: "gray",
         text:
@@ -174,13 +202,13 @@ const config = {
         beginAtZero: true,
         type: "linear",
         min: -20 + Math.ceil(Math.min(-10, ...temperatureData) / 10) * 2 * 10,
-        max: 100 + Math.ceil(Math.max(700, ...precipitationData) / 100) * 10,
+        max: 100 + Math.ceil(Math.max(600, ...precipitationData) / 100) * 10,
         ticks: {
+          stepSize: 20,
           color: "#00B0F0",
           font: {
             size: 14,
           },
-          stepSize: 10,
           callback: function (value, index, values) {
             if (value > 100) {
               return 100 + (value - 100) * 10 + " mm";
@@ -202,14 +230,14 @@ const config = {
         position: "left",
         display: true,
         min: -20 + Math.ceil(Math.min(-10, ...temperatureData) / 10) * 2 * 10,
-        max: 100 + Math.ceil(Math.max(700, ...precipitationData) / 100) * 10,
+        max: 100 + Math.ceil(Math.max(600, ...precipitationData) / 100) * 10,
         ticks: {
+          stepSize: 20,
           color: "#BE4B48",
           font: {
             size: 14,
           },
           beginAtZero: true,
-          stepSize: 10,
           callback: function (value, index, values) {
             if (value < 81) {
               return value / 2 + "° C";
@@ -228,6 +256,7 @@ const config = {
       },
     },
   },
+  plugins: [plugin],
 };
 
 class Switch {
@@ -267,10 +296,10 @@ window.addEventListener("load", function () {
 
 function toggleData() {
   myChart.data.datasets.forEach((dataset) => {
-    // Umschalten des hidden-Status zuerst
+    // Switch the hidden status first
     dataset.hidden = !dataset.hidden;
 
-    // Wenn das Label 'Pre1' oder 'Pre2' ist und hidden=true, ändere den Typ auf 'line', sonst auf 'bar'
+    // If the label is 'Pre1' or 'Pre2' and hidden=true, change the type to 'line', otherwise to 'bar'
     if (dataset.label === "Pre1" || dataset.label === "Pre2") {
       if (dataset.hidden) {
         dataset.type = "line";
@@ -286,31 +315,31 @@ function toggleData() {
   myChart.update();
 }
 
-// Diagramm erstellen
+// Create diagram
 const ctx = document
   .getElementById("precipitationAndTemperatureChart")
   .getContext("2d");
 myChart = new Chart(ctx, config);
 
 function downloadChart() {
-  // Das Diagramm-Canvas-Element
-  var canvas = document.getElementById("precipitationAndTemperatureChart");
+  // The diagram canvas element
+  let canvas = document.getElementById("precipitationAndTemperatureChart");
 
-  // Konvertiere das Canvas-Element in eine Base64-codierte PNG-URL
-  var dataURL = canvas.toDataURL("image/png");
+  // Convert the canvas element into a Base64-encoded PNG URL
+  let dataURL = canvas.toDataURL("image/png");
 
-  // Erstelle einen unsichtbaren HTML-Link
-  var downloadLink = document.createElement("a");
+  // Create an invisible HTML link
+  let downloadLink = document.createElement("a");
   downloadLink.href = dataURL;
 
-  // Setze den Dateinamen für den Download
-  var fileName = ortData.toLowerCase().replace(/\s/g, "_") + ".png";
+  // Set the file name for the download
+  let fileName = ortData.toLowerCase().replace(/\s/g, "_") + ".png";
   downloadLink.download = fileName;
 
-  // Füge den Link zum Dokument hinzu und simuliere einen Klick
+  // Add the link to the document and simulate a click
   document.body.appendChild(downloadLink);
   downloadLink.click();
 
-  // Entferne den Link aus dem Dokument
+  // Remove the link from the document
   document.body.removeChild(downloadLink);
 }

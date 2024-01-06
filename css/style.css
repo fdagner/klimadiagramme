@@ -125,3 +125,46 @@ body {
     border-radius: 50%;
   }
   
+  .custom-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.selected-option {
+    padding: 10px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.dropdown-list {
+    display: none;
+    position: absolute;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    width: 100%;
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.dropdown-list li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.dropdown-list li:hover {
+    background-color: #f2f2f2;
+}
+
+.show {
+    display: block;
+}
+
+@media only screen and (max-height:480px) and (orientation:portrait) { 
+  .custom-dropdown
+   { 
+     size: 10;
+   }
+  }

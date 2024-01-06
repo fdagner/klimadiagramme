@@ -1,4 +1,4 @@
-// Funktion zum Filtern der Optionen basierend auf dem Suchfeld
+// Function for filtering the options based on the search field
 function sucheOrt() {
   var input = document.getElementById("suchfeld").value.toLowerCase();
   var options = document.getElementById("ortAuswahl").options;
@@ -15,17 +15,17 @@ function sucheOrt() {
     }
   }
 
-  // Dynamisch die Größe des Dropdown-Menüs ändern
+  // Dynamically change the size of the drop-down menu
   var dropdown = document.getElementById("ortAuswahl");
-  dropdown.size = Math.min(visibleOptionsCount, 5); // Hier können Sie die maximale Anzahl der sichtbaren Optionen anpassen (z. B. 10).
+  dropdown.size = Math.min(visibleOptionsCount, 10); // Hier können Sie die maximale Anzahl der sichtbaren Optionen anpassen (z. B. 10).
 
-  // Zurücksetzen der Größe auf 1, wenn nur ein Ergebnis gefunden wurde
+// Reset the size to 1 if only one result was found
   if (visibleOptionsCount === 1) {
     dropdown.size = 2;
   }
 }
 
-// Funktion zum Ein- und Ausblenden des Orts basierend auf dem Checkbox-Status
+// Function for showing and hiding the location based on the checkbox status
 function toggleOrtVisibility() {
   const showOrtCheckbox = document.getElementById("showOrtCheckbox");
   const isOrtVisible = showOrtCheckbox.checked;
@@ -35,7 +35,6 @@ function toggleOrtVisibility() {
   } else {
     myChart.options.plugins.title.display = false;
   }
-
   myChart.update();
 }
 
@@ -48,7 +47,6 @@ function toggleSubtitleVisibility() {
   } else {
     myChart.options.plugins.subtitle.display = false;
   }
-
   myChart.update();
 }
 
@@ -66,7 +64,7 @@ function togglePrecipitationVisibility() {
   if (isPrecipitationVisible) {
     precipitationDataset1.fill = {
       target: "-1",
-      above: "rgba(0,176,240,0.75)", // Area will be red above the origin
+      above: "rgba(0,176,240,0.75)",
     };
     precipitationDataset2.borderWidth = 3;
     precipitationDataset2.fill = {
@@ -99,7 +97,7 @@ function toggleTemperatureVisibility() {
     temperatureDataset2.borderWidth = 3;
     temperatureDataset1.fill = {
       target: "1",
-      above: "rgba(255, 252, 127, 0.75)", // Area will be red above the origin
+      above: "rgba(255, 252, 127, 0.75)",
     };
   } else {
     temperatureDataset1.borderWidth = 0;

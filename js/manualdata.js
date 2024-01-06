@@ -41,7 +41,7 @@ function updateChartData() {
 
   const temperatureValues = temperatureInput
     .split(";")
-    .map((value) => parseFloat(value) * 2);
+    .map((value) => parseFloat(value *2));
   const precipitationValues = precipitationInput
     .split(";")
     .map((value) => parseFloat(value));
@@ -93,13 +93,13 @@ function updateChartData() {
 
   // Aktualisieren Sie die Achsenskalierungen
   myChart.options.scales.y1.max =
-    100 + Math.ceil(Math.max(700, ...precipitationValues) / 100) * 10;
+    100 + Math.ceil(Math.max(600, ...precipitationValues) / 100) * 10;
   myChart.options.scales.y1.min =
-    -20 + Math.ceil(Math.min(-20, ...temperatureValues) / 10) * 10;
+    -20 + Math.ceil(Math.min(-20, ...temperatureValues) / 2 / 10) * 2 * 10;
   myChart.options.scales.y2.max =
-    100 + Math.ceil(Math.max(700, ...precipitationValues) / 100) * 10;
+    100 + Math.ceil(Math.max(600, ...precipitationValues) / 100) * 10;
   myChart.options.scales.y2.min =
-    -20 + Math.ceil(Math.min(-20, ...temperatureValues) / 10) * 10;
+    -20 + Math.ceil(Math.min(-20, ...temperatureValues) / 2 / 10) * 2 * 10;
 
   // Aktualisieren Sie das Diagramm mit den neuen Achsenskalierungen
 

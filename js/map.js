@@ -1,42 +1,42 @@
- // Koordinaten für den Marker
+ // Coordinates for the marker
  const markerCoordinates = [parseFloat(latData), parseFloat(lonData)]; // Koordinaten in Zahlen umwandeln
 
- // Erstelle die Leaflet-Karte
+ // Create the leaflet card
  const myMap = L.map("map",{
 minZoom: 1,
-maxZoom: 4, // Du kannst diesen Wert je nach Bedarf anpassen
+maxZoom: 4,
 }).setView(markerCoordinates, 1);
 
- // Füge die OpenStreetMap-Basiskarte hinzu
+ // Add the OpenStreetMap basemap
  L.tileLayer("js/map/{z}/{x}/{y}.png", {
 attribution: 'Kartendaten: © <a href="https://openstreetmap.org/copyright">OpenStreetMap</a>-Mitwirkende, SRTM | Kartendarstellung: <a href="https://opentopomap.org/">© OpenTopoMap</a> <a href="https://creativecommons.org/licenses/by-sa/3.0/">(CC-BY-SA)</a>',
 }).addTo(myMap);
 
- // Füge einen Marker mit benutzerdefiniertem Icon hinzu
+// Add a marker with a user-defined icon
  const customIcon = L.icon({
    iconUrl: 'img/ts-map-pin.svg',
-   iconSize: [32, 32], // Größe des Icons in Pixel
-   iconAnchor: [16, 28], // Position des Ankers relativ zur Icon-Position
+   iconSize: [32, 32], 
+   iconAnchor: [16, 28], //Position of the anchor relative to the icon position
  });
 
- // Füge den Marker hinzu
+// Add the marker
  L.marker(markerCoordinates, { icon: customIcon }).addTo(myMap);
 
- // Funktion zum Aktualisieren der Leaflet-Karte basierend auf den neuen Koordinaten
+// Function for updating the leaflet map based on the new coordinates
  function updateLeafletMap() {
-   // Neue Koordinaten
+ // New coordinates
    const newLatLng = L.latLng(parseFloat(latData), parseFloat(lonData));
 
-   // Entferne bestehende Marker, um doppelte Marker zu vermeiden
+   // Remove existing markers to avoid duplicate markers
    myMap.eachLayer((layer) => {
      if (layer instanceof L.Marker) {
        layer.remove();
      }
    });
 
-   // Füge den neuen Marker hinzu
+   // Add the new marker
    L.marker(newLatLng, { icon: customIcon }).addTo(myMap);
 
-   // Aktualisiere die Karte
+   // Update the map
    myMap.setView(newLatLng, 1);
  }
