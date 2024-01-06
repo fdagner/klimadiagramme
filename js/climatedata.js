@@ -1,58 +1,58 @@
-var geodaten = []; // Das Array, um die CSV-Daten zu speichern
-var myChart; // Das Diagrammobjekt
+let geodaten = []; // The array to store the CSV data
+let myChart; // The chart object
 let ortData = "Musterhausen";
 let hoeheData = "300";
 let lonData = "0";
 let latData = "0";
-// Funktion zum Aktualisieren des Dateinamens basierend auf dem aktuellen Ort
+// Function to update the file name based on the current location
 function updateFileName() {
-  // Entferne alle Punkte und Sonderzeichen aus dem Ort
-  var cleanOrt = ortData
+ // Remove all dots and special characters from the location
+  let cleanOrt = ortData
     .toLowerCase()
     .replace(/[^\w\s]/g, "")
     .replace(/\s/g, "_");
-  var fileName = cleanOrt + ".png";
-  var downloadButton = document.getElementById("downloadButton");
+  let fileName = cleanOrt + ".png";
+  let downloadButton = document.getElementById("downloadButton");
   downloadButton.download = fileName;
 }
-// Funktion zum Anzeigen von Daten nach Auswahl des Orts
+// Function to display data after selecting the location
 function anzeigenNachOrt() {
-  var selectedOrtId = document.getElementById("ortAuswahl").value;
+  let selectedOrtId = document.getElementById("ortAuswahl").value;
 
-  // Suchen Sie im Array nach den Daten für den ausgewählten Ort
-  var datensatz = geodaten.find(function (datensatz) {
+// Search the array for data for the selected location
+  let datensatz = geodaten.find(function (datensatz) {
     return datensatz.ID === selectedOrtId;
   });
 
-  // Überprüfen, ob der Datensatz gefunden wurde
+ // Check if the dataset was found
   if (datensatz) {
-    // Extrahieren Sie die Spaltenüberschriften
-    var spalten = Object.keys(datensatz);
+    // Extract column headers
+    let spalten = Object.keys(datensatz);
     ortData = datensatz["Ort"];
     hoeheData = datensatz["Hoehenlage"];
     lonData = datensatz["Laengengrad"];
     latData = datensatz["Breitengrad"];
     refData = datensatz["Referenzzeitraum"];
 
-    // Fügen Sie die Niederschlagsdaten in das precipitationData-Array ein
-    for (var i = 16; i <= 27; i++) {
-      var niederschlag = parseFloat(datensatz[spalten[i]].replace(",", "."));
+    // Insert precipitation data into the precipitationData array
+    for (let i = 16; i <= 27; i++) {
+      let niederschlag = parseFloat(datensatz[spalten[i]].replace(",", "."));
 
-      // Überprüfen Sie auf ungültige Werte
+      // Check for invalid values
       if (!isNaN(niederschlag)) {
         precipitationData[i - 16] = niederschlag;
       } else {
         console.warn("Ungültiger Wert für Spalte " + (i + 1));
-        precipitationData[i - 16] = null; // Fügen Sie null oder einen anderen Wert für ungültige Daten hinzu
+        precipitationData[i - 16] = null; // Add null or another value for invalid data
         updateFileName();
       }
     }
 
-    // Extrahieren Sie die Temperaturdaten und fügen Sie sie in das temperatureData-Array ein
-    for (var j = 4; j <= 15; j++) {
-      var temperatur = parseFloat(datensatz[spalten[j]].replace(",", "."));
+    // Extract temperature data and insert it into the temperatureData array
+    for (let j = 4; j <= 15; j++) {
+      let temperatur = parseFloat(datensatz[spalten[j]].replace(",", "."));
 
-      // Überprüfen Sie auf ungültige Werte
+       // Check for invalid values
       if (!isNaN(temperatur)) {
         temperatureData[j - 4] = temperatur;
       } else {
@@ -61,7 +61,7 @@ function anzeigenNachOrt() {
       }
     }
 
-    // Jetzt ist das precipitationData-Array mit den Niederschlagsdaten und temperatureData-Array mit den Temperaturdaten gefüllt
+    // Extract temperature data and insert it into the temperatureData array
     console.log("Niederschlagsdaten Array: ", precipitationData);
     console.log("Temperaturdaten Array: ", temperatureData);
     const temperatureSum = temperatureData.reduce(
@@ -88,14 +88,14 @@ function anzeigenNachOrt() {
       (myChart.options.plugins.title.text = ortData);
 
     (myChart.options.scales.y1.max =
-      100 + Math.ceil(Math.max(700, ...precipitationData) / 100) * 10),
+      100 + Math.ceil(Math.max(600, ...precipitationData) / 100) * 10),
       (myChart.options.scales.y1.min =
         -20 + Math.ceil(Math.min(-10, ...temperatureData) / 10) * 2 * 10),
       (myChart.options.scales.y2.max =
-        100 + Math.ceil(Math.max(700, ...precipitationData) / 100) * 10),
+      100 + Math.ceil(Math.max(600, ...precipitationData) / 100) * 10),
       (myChart.options.scales.y2.min =
         -20 + Math.ceil(Math.min(-10, ...temperatureData) / 10) * 2 * 10),
-      // Aktualisieren Sie das Diagramm mit den neuen Daten
+        // Update the chart with the new data
       (myChart.options.scales.x.title.display = true);
     updateChart();
     updateFileName();
@@ -107,7 +107,7 @@ function anzeigenNachOrt() {
   }
 }
 
-// Funktion zum Aktualisieren des Diagramms mit den neuen Daten
+// Function to load the CSV file and locations
 function updateChart() {
   config.data.datasets[1].data = precipitationData.map((value) =>
     Math.min(value, 100)
@@ -130,29 +130,29 @@ function updateChart() {
 
 // Funktion zum Laden der CSV-Datei und der Orte
 function ladeOrte() {
-  // Pfad zur CSV-Datei
-  var csvDatei = "data/geodaten.csv";
+    // Path to the CSV file
+  let csvDatei = "data/geodaten.csv";
 
-  // XMLHttpRequest, um die CSV-Datei zu laden
-  var xhr = new XMLHttpRequest();
+  // XMLHttpRequest to load the CSV file
+  let xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function () {
     if (xhr.readyState === 4 && xhr.status === 200) {
-      // CSV-Daten in einen Array von Zeilen aufteilen
-      var zeilen = xhr.responseText.split("\n");
+       // Split CSV data into an array of lines
+      let zeilen = xhr.responseText.split("\n");
 
-      // Extrahiere die Spaltenüberschriften (erste Zeile)
-      var spalten = zeilen[0].split(";").map(function (spalte) {
+      // Extract column headers (first line)
+      let spalten = zeilen[0].split(";").map(function (spalte) {
         return spalte.trim();
       });
 
-      // Iteriere durch die Zeilen und füge die Daten zum Array hinzu
-      for (var i = 1; i < zeilen.length; i++) {
-        var daten = zeilen[i].split(";");
+      // Iterate through the lines and add data to the array
+      for (let i = 1; i < zeilen.length; i++) {
+        let daten = zeilen[i].split(";");
 
-        // Überprüfe, ob die Anzahl der Werte in der Zeile mit der Anzahl der Spaltenüberschriften übereinstimmt
+         // Check if the number of values in the line matches the number of column headers
         if (daten.length === spalten.length) {
-          var datensatz = {};
-          for (var j = 0; j < spalten.length; j++) {
+          let datensatz = {};
+          for (let j = 0; j < spalten.length; j++) {
             datensatz[spalten[j]] = daten[j].trim();
           }
           geodaten.push(datensatz);
@@ -161,10 +161,10 @@ function ladeOrte() {
         }
       }
 
-      // Sortiere das Array nach dem Land und dann nach dem Ort
+    // Sort the array by country and then by location
       geodaten.sort(function (a, b) {
-        var landA = a.Land.toUpperCase(); // Nicht case-sensitive sortieren
-        var landB = b.Land.toUpperCase();
+        let landA = a.Land.toUpperCase(); // Sort case-insensitively
+        let landB = b.Land.toUpperCase();
         if (landA < landB) {
           return -1;
         }
@@ -172,9 +172,9 @@ function ladeOrte() {
           return 1;
         }
 
-        // Wenn die Länder gleich sind, sortiere nach dem Ort
-        var ortA = a.Ort.toUpperCase();
-        var ortB = b.Ort.toUpperCase();
+        // If countries are the same, sort by location
+        let ortA = a.Ort.toUpperCase();
+        let ortB = b.Ort.toUpperCase();
         if (ortA < ortB) {
           return -1;
         }
@@ -184,12 +184,12 @@ function ladeOrte() {
         return 0;
       });
 
-      // Hier können Sie den Code für das Laden der Orte ins Dropdown-Menü implementieren
-      var ortAuswahl = document.getElementById("ortAuswahl");
+  // Implement code here for loading locations into the dropdown menu
+      let ortAuswahl = document.getElementById("ortAuswahl");
 
-      // Füge die Optionen zum Dropdown-Menü hinzu
-      for (var k = 0; k < geodaten.length; k++) {
-        var option = document.createElement("option");
+    // Add options to the dropdown menu
+      for (let k = 0; k < geodaten.length; k++) {
+        let option = document.createElement("option");
         option.value = geodaten[k].ID;
         option.text =
           geodaten[k].Land +
@@ -206,19 +206,19 @@ function ladeOrte() {
   xhr.send();
 }
 
-// Funktion zum Setzen der Beispiel-Daten in die Input-Felder
+// Function to set example data in the input fields
 function setData() {
   document.getElementById("ortInput").value = ortData;
   document.getElementById("hoeheInput").value = hoeheData;
 }
 
 function setValuesInInputFields() {
-  // Temperaturen in Zeichenkette mit Strichpunkt statt Komma umwandeln
+   // Convert temperatures to string with semicolon instead of comma
   const temperatureString = temperatureData.join(";");
-  // Niederschläge in Zeichenkette mit Strichpunkt statt Komma umwandeln
+ // Convert precipitation to string with semicolon instead of comma
   const precipitationString = precipitationData.join(";");
 
-  // Setze die Werte in die Input-Felder
+  // Set the values in the input fields
   document.getElementById("temperatureInput").value = temperatureString;
   document.getElementById("precipitationInput").value = precipitationString;
 }
