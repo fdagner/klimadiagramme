@@ -33,7 +33,7 @@ const config = {
     datasets: [
       {
         label: "Temperatur (°C)",
-        data: temperatureData.map((value) => value * 2),
+        data: temperatureData.map((value) => value * 2) + " °C",
         type: "line",
         hidden: true,
         borderColor: "#BE4B48",
