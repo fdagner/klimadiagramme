@@ -33,7 +33,7 @@ const config = {
     datasets: [
       {
         label: "Temperatur (°C)",
-        data: temperatureData.map((value) => value * 2) + " °C",
+        data: temperatureData.map((value) => value * 2),
         type: "line",
         hidden: true,
         borderColor: "#BE4B48",
@@ -152,7 +152,7 @@ const config = {
       x: {
         ticks: {
           font: {
-            size: 16,
+            size: 14,
           },
         },
         stacked: true,
@@ -178,16 +178,16 @@ const config = {
         ticks: {
           color: "#00B0F0",
           font: {
-            size: 16,
+            size: 14,
           },
           stepSize: 10,
           callback: function (value, index, values) {
             if (value > 100) {
-              return 100 + (value - 100) * 10;
+              return 100 + (value - 100) * 10 + " mm";
             } else if (value < 0) {
               return "";
             } else {
-              return value;
+              return value + " mm";
             }
           },
         },
@@ -206,13 +206,13 @@ const config = {
         ticks: {
           color: "#BE4B48",
           font: {
-            size: 16,
+            size: 14,
           },
           beginAtZero: true,
           stepSize: 10,
           callback: function (value, index, values) {
             if (value < 81) {
-              return value / 2;
+              return value / 2 + "° C";
             } else {
               return "";
             }
