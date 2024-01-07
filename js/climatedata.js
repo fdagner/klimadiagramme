@@ -70,7 +70,7 @@ function anzeigenNachOrt()
             else
             {
                 console.warn("Ungültiger Wert für Temperatur in Spalte " + (j + 1));
-                temperatureData[j - 4] = null; // Fügen Sie null oder einen anderen Wert für ungültige Daten hinzu
+                temperatureData[j - 4] = null;
             }
         }
 
@@ -217,7 +217,7 @@ function ladeOrte()
             for (let k = 0; k < geodaten.length; k++)
             {
                 let option = document.createElement("a");
-                option.id = geodaten[k].ID; // Setzen Sie die ID basierend auf der geodaten-ID
+                option.id = geodaten[k].ID;
                 option.textContent =
                     geodaten[k].Land +
                     " - " +
