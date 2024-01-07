@@ -6,6 +6,7 @@ body {
 
   p {
     margin: 0px 0px 10px 0px;
+    padding: 6px;
   }
 
   /* Styles für Links */
@@ -31,7 +32,7 @@ body {
   }
 
   /* Styles für Button */
-  button {
+  button, summary {
     padding: 8px 8px;
     font-size: 14px;
     border: none;
@@ -43,7 +44,7 @@ body {
     transition: background-color 0.3s ease;
   }
 
-  /* Hover-Effekt für Button */
+    /* Hover-Effekt für Button */
   button:hover {
     background-color: #fc8042;
   }
@@ -85,7 +86,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ff4800;
+    background-color: #ff48006f;
     -webkit-transition: .4s;
     transition: .4s;
   }

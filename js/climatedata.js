@@ -19,7 +19,7 @@ function updateFileName()
 // Function to display data after selecting the location
 function anzeigenNachOrt()
 {
-    // Das erste ausgewählte Element abrufen
+    // Select first element.
     let selectedOrtId = document.querySelector("#ortAuswahl a.selected").id;
 
     // Search the array for data for the selected location
@@ -142,7 +142,6 @@ function updateChart()
     updateFileName();
 }
 
-// Funktion zum Laden der CSV-Datei und der Orte
 function ladeOrte()
 {
     // Path to the CSV file

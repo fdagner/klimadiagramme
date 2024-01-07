@@ -29,30 +29,35 @@
             </ul>
             <div>
                 <h2>Klimadiagramm erstellen</h2>
-                <div style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin-bottom: 10px;">
+                <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-bottom: 10px;">
                     <input type="text" placeholder="Suche.." id="searchInput" onkeyup="filterFunction()">
                     <div id="ortAuswahl" class="dropdown-content">
                         <!-- Options will be dynamically added here using JavaScript -->
                     </div>
-                </div>
-                <div style="display: flex; gap: 25px; flex-wrap: wrap; justify-content: center;">
+                   <div style="border: 1px solid #ddd; background-color: #f5f5f5; width: 100%;max-width: 715px; padding: 8px; display: grid;gap: 12px;grid-template-columns: 1fr 3fr 1fr 3fr;">
+                        <label class="switch">
+                        <input type="checkbox" id="toggleCheckbox" onclick="toggleData()" checked>
+                        <span class="slider round"></span>
+                        </label>Balkendiagramm
+                        <label class="switch">
+                            <input type="checkbox" id="showOrtCheckbox" onclick="toggleOrtVisibility()" checked>
+                            <span class="slider round"></span>
+                            </label>Titel (Klimastation)
+                            <label class="switch">
+                            <input type="checkbox" id="showPrecipitationCheckbox" onclick="togglePrecipitationVisibility()" checked>
+                            <span class="slider round"></span>
+                            </label> Niederschläge<label class="switch">
+                            <input type="checkbox" id="showTemperatureCheckbox" onclick="toggleTemperatureVisibility()" checked>
+                            <span class="slider round"></span>
+                            </label>Temperatur&nbsp;<label class="switch">
+                            <input type="checkbox" id="showSubtitleCheckbox" onclick="toggleSubtitleVisibility()"  checked>
+                            <span class="slider round"></span>
+                            </label> Untertitel<input type="color" id="colorPicker" value="#ffffff">Hintergrund
+                    </div>
                     <div class="chart-container" style="position: relative; height: 500px; width: 350px;">
                         <canvas id="precipitationAndTemperatureChart" style="position: relative; width: 350px; height: 500px; border: 1px solid silver;"></canvas>
                     </div>
                     <div id="map" style="position: relative; width: 360px; height: 280px;"></div>
-                    <div style="border: 0px solid #ff4800; width: 100%; padding: 8px;">
-                        <input type="checkbox" id="showOrtCheckbox" checked onchange="toggleOrtVisibility()">Titel <input type="checkbox" id="showSubtitleCheckbox" checked onchange="toggleSubtitleVisibility()">Untertitel
-                        <input type="checkbox" id="showPrecipitationCheckbox" checked onchange="togglePrecipitationVisibility()">Niederschläge
-                        <input type="checkbox" id="showTemperatureCheckbox" checked onchange="toggleTemperatureVisibility()">Temperatur<br>
-                        <br>
-                        Diagrammart:
-                        <label class="switch">
-                        <input type="checkbox" onclick="toggleData()" checked>
-                        <span class="slider round"></span>
-                        </label>
-                        Farbe:
-                        <input type="color" id="colorPicker" value="#ffffff">
-                    </div>
                     <div style="display: flex; flex-wrap: wrap; width: 800px; justify-content: space-between;">
                         <div></div>
                         <div style="width: 375px; text-align: right;">
@@ -68,8 +73,8 @@
                             <br>
                         </div>
                     </div>
-                </div>
-                <h2>Daten überschreiben</h2>
+                </div><br><br>
+                <details><summary>Klimadiagramm editieren</summary>
                 <p>
                     Sie können Daten im Diagramm manuell überschreiben. Titel und Höhe dürfen auch leer sein. Bearbeiten Sie monatsweise die mit einem Strichpunkt getrennten Niederschlags- und Temperaturdaten. Klicken Sie dann auf "Daten
                     übernehmen".
@@ -98,7 +103,7 @@
                     <input type="text" id="precipitationInput" class="input-field" style="width: 100%;">
                     </label>
                     <button onclick="updateChartData()" style="width: 200px;">Daten übernehmen</button>
-                </div>
+                </div></details>
             </div>
             <hr style="margin-top: 55px;">
             <p>
