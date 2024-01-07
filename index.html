@@ -13,7 +13,7 @@
         <script src="js/manualdata.js"></script>
     </head>
     <body>
-        <div style="position: relative; width: 100%; max-width: 800px; margin: 0 auto;">
+        <div style="background-color: #fff; display: flex; flex-direction:column;  gap: 15px; position: relative; max-width: 800px; margin: 0 auto; padding:30px">
             <h1>Klimadiagramme für Schule und Unterricht</h1>
             <p style="text-align: justify;">
                 <b>
@@ -27,34 +27,37 @@
                 <li><b>R1: </b>1961 bis 1990 (2 306 Datensätze, Datenbasis: <i>Deutscher Wetterdienst</i>)</li>
                 <li><b>R2: </b>1991 bis 2020 (1 055 Datensätze, Datenbasis: <i>Deutscher Wetterdienst</i>, eigene Berechnung)</li>
             </ul>
-            <div>
+            </div>
+            <div style="background-color: #fff; display: flex; flex-direction:column;  gap: 15px; position: relative; max-width: 800px; margin: 0 auto; padding:30px; margin-top: 5px">
+         
                 <h2>Klimadiagramm erstellen</h2>
                 <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-bottom: 10px;">
                     <input type="text" placeholder="Suche.." id="searchInput" onkeyup="filterFunction()">
                     <div id="ortAuswahl" class="dropdown-content">
                         <!-- Options will be dynamically added here using JavaScript -->
                     </div>
-                   <div style="border: 1px solid #ddd; background-color: #f5f5f5; width: 100%;max-width: 715px; padding: 8px; display: grid;gap: 12px;grid-template-columns: 1fr 3fr 1fr 3fr;">
-                            <label class="switch">
+                   <div style="border: 1px solid #ddd; background-color: #f5f5f5; width: 100%;max-width: 715px; padding: 8px; display: grid;gap: 12px; grid-template-columns: 1fr 2fr;">
+                            Titel<label class="switch">
                             <input type="checkbox" id="showOrtCheckbox" onclick="toggleOrtVisibility()" checked>
                             <span class="slider round"></span>
-                            </label>Titel
-                            <label class="switch">
+                            </label>
+                            Untertitel<label class="switch">
                             <input type="checkbox" id="showSubtitleCheckbox" onclick="toggleSubtitleVisibility()"  checked>
                             <span class="slider round"></span>
-                            </label> Untertitel
-                            <label class="switch">
+                            </label>
+                            Niederschläge<label class="switch">
                             <input type="checkbox" id="showPrecipitationCheckbox" onclick="togglePrecipitationVisibility()" checked>
                             <span class="slider round"></span>
-                            </label> Niederschläge<label class="switch">
+                            </label>
+                            Temperatur<label class="switch">
                             <input type="checkbox" id="showTemperatureCheckbox" onclick="toggleTemperatureVisibility()" checked>
                             <span class="slider round"></span>
-                            </label>Temperatur&nbsp;
-                            <input type="color" id="colorPicker" value="#ffffff">Hintergrund
-                            <div style="max-width: 250px;grid-column: span 2;">
+                            </label>
+                            Hintergrund <input type="color" id="colorPicker" value="#ffffff">
+                            <div style="grid-column: span 2;">
                             <button type="button" id="toggleCheckbox" onclick="toggleData()" style="text-align: left;"><svg xmlns="http://www.w3.org/2000/svg" height="14" width="12" fill="white" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M438.6 150.6c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.7 96 32 96C14.3 96 0 110.3 0 128s14.3 32 32 32l306.7 0-41.4 41.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96zm-333.3 352c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 416 416 416c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0 41.4-41.4c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96z"/></svg> 
                                 Diagrammart</button>
-                                </div>
+                            </div>
                     </div>
                     <div class="chart-container" style="position: relative; height: 500px; width: 350px;">
                         <canvas id="precipitationAndTemperatureChart" style="position: relative; width: 350px; height: 500px; border: 1px solid silver;"></canvas>
@@ -106,16 +109,13 @@
                     </label>
                     <button onclick="updateChartData()" style="width: 200px;">Daten übernehmen</button>
                 </div></details>
-            </div>
-            <hr style="margin-top: 55px;">
+            </div></div>
+            <div style="background-color: #fff; display: flex; flex-direction:column;  gap: 15px; position: relative; max-width: 800px; margin: 0 auto; margin-top: 5px; padding: 0px 30px 0px 30px">        
             <p>
                 <small>
                 Beachten Sie die <a href="https://opendata.dwd.de/climate_environment/CDC/Nutzungsbedingungen_German.pdf">Nutzungsbedingungen</a> für die Daten im CDC-OpenData-Bereich des deutschen Wetterdienstes.<br>
                 Für eine tiefergehende Analyse von Klimadiagrammen und -daten empfehle ich <a href="https://climatecharts.net/">ClimateCharts.net</a> (Technische Universtität Dresden).
-                </small>
-            </p>
-            <p>
-                <small>
+            <br>
                 Der Quellcode sowie Möglichkeiten zur Mitwirkung sind über das <a href="https://github.com/fdagner/klimadiagramme">Repository auf Github</a> zu erreichen.<br>
                 <a href="https://github.com/fdagner">fdagner</a> · Klimadiagramme für Schule und Unterricht
                 </small>
