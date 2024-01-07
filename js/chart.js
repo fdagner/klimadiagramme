@@ -302,12 +302,8 @@ function toggleData() {
     // If the label is 'Pre1' or 'Pre2' and hidden=true, change the type to 'line', otherwise to 'bar'
     if (dataset.label === "Pre1" || dataset.label === "Pre2") {
       if (dataset.hidden) {
-        dataset.type = "line";
-        myChart.config.type = "line";
         myChart.options.scales.x.offset = false;
       } else {
-        dataset.type = "bar";
-        myChart.config.type = "bar";
         myChart.options.scales.x.offset = true;
       }
     }
