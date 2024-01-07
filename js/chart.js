@@ -250,9 +250,7 @@ const config = {
           display: false,
           text: "Temperatur (°C)",
         },
-        grid: {
-          drawOnChartArea: false, // only want the grid lines for one axis to show up
-        },
+
       },
     },
   },

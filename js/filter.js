@@ -100,6 +100,7 @@ function togglePrecipitationVisibility()
         };
         precipitationDataset3.backgroundColor = "#00B0F0";
         precipitationDataset4.backgroundColor = "#40699C";
+        myChart.options.scales.y1.display = true;
     }
     else
     {
@@ -108,6 +109,7 @@ function togglePrecipitationVisibility()
         precipitationDataset2.fill = false;
         precipitationDataset3.backgroundColor = "transparent";
         precipitationDataset4.backgroundColor = "transparent";
+        myChart.options.scales.y1.display = false;
     }
     myChart.update();
 }
@@ -130,12 +132,14 @@ function toggleTemperatureVisibility()
             target: "1",
             above: "rgba(255, 252, 127, 0.75)",
         };
+        myChart.options.scales.y2.display = true;
     }
     else
     {
         temperatureDataset1.borderWidth = 0;
         temperatureDataset2.borderWidth = 0;
         temperatureDataset1.fill = false;
+        myChart.options.scales.y2.display = false;
     }
     myChart.update();
 }
