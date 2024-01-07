@@ -299,7 +299,6 @@ function toggleData() {
     // Switch the hidden status first
     dataset.hidden = !dataset.hidden;
 
-    // If the label is 'Pre1' or 'Pre2' and hidden=true, change the type to 'line', otherwise to 'bar'
     if (dataset.label === "Pre1" || dataset.label === "Pre2") {
       if (dataset.hidden) {
         myChart.options.scales.x.offset = false;
