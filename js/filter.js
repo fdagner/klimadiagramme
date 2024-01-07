@@ -28,7 +28,7 @@ function filterFunction()
 
 function toggleSelection(element)
 {
-    // Alle anderen ausgewählten Elemente entfernen
+    // Remove all other selected elements
     let allSelectedElements = document.querySelectorAll("#ortAuswahl a.selected");
     allSelectedElements.forEach(selectedElement =>
     {
@@ -38,7 +38,7 @@ function toggleSelection(element)
         }
     });
 
-    // Die "selected"-Klasse zum aktuellen ausgewählten Element hinzufügen
+    // Add the "selected" class to the currently selected element
     element.classList.toggle("selected");
 }
 
