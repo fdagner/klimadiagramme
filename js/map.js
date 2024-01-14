@@ -4,9 +4,9 @@ const markerCoordinates = [parseFloat(latData), parseFloat(lonData)]; // Koordin
 // Create the leaflet card
 const myMap = L.map("map",
 {
-    minZoom: 1,
-    maxZoom: 4,
-}).setView(markerCoordinates, 1);
+    minZoom: 0,
+    maxZoom: 5,
+}).setView(markerCoordinates, 0);
 
 // Add the OpenStreetMap basemap
 L.tileLayer("js/map/{z}/{x}/{y}.png",

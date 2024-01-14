@@ -1,30 +1,17 @@
 // Dummy data for precipitation per month and temperatures
-const precipitationData = [
+let precipitationData = [
   110, 180, 120, 60, 10, 10, 10, 10, 60, 110, 130, 120,
 ];
-const temperatureData = [-10, -5, -2, 4, 10, 15, 16, 15, 10, 5, 0, -5];
-
-// Calculate the sum of the temperature data
-const temperatureSum = temperatureData.reduce(
-  (acc, temperature) => acc + temperature,
-  0
-);
+let temperatureData = [-10, -5, -2, 4, 10, 15, 16, 15, 10, 5, 0, -5];
 
 // Calculate mean value
-const temperatureAverage = temperatureSum / temperatureData.length;
-const roundedAverage = parseFloat(temperatureAverage.toFixed(1));
+let temperatureAverage = calculateAverage(temperatureData);
+roundedAverage = parseFloat(temperatureAverage.toFixed(1));
 
 // Calculate the sum of precipitation
-const precipitationSum = precipitationData.reduce(
-  (acc, precipitation) => acc + precipitation,
-  0
-);
-const roundedPrecipitation = precipitationSum.toFixed(0);
+let precipitationSum = calculateSum(precipitationData);
+roundedPrecipitation = precipitationSum.toFixed(0);
 
-// Function for adjusting the colour based on the precipitation value
-function getColor(value) {
-  return value <= 100 ? "#00B0F0" : "#40699C";
-}
 // Note: changes to the plugin code is not reflected to the chart, because the plugin is loaded at chart construction time and editor changes only trigger an chart.update().
 const plugin = {
   id: 'customCanvasBackgroundColor',
@@ -48,6 +35,10 @@ colorPicker.addEventListener('input', function () {
   myChart.update();
 });
 
+const temperatureDataMapped = temperatureData.map((value) => value * 2);
+const precipitationDataLimited = precipitationData.map((value) => Math.min(value, 100));
+const precipitationDataRest = precipitationData.map((value) => Math.max(0, value - 100) / 10);
+
 // Configuration for the diagram
 const config = {
   data: {
@@ -55,7 +46,7 @@ const config = {
     datasets: [
       {
         label: "Temperatur (°C)",
-        data: temperatureData.map((value) => value * 2),
+        data: temperatureDataMapped,
         type: "line",
         hidden: true,
         borderColor: "#BE4B48",
@@ -72,7 +63,7 @@ const config = {
         label: "Niederschläge (mm)",
         type: "line",
         hidden: true,
-        data: precipitationData.map((value) => Math.min(value, 100)), // Limit the value to 100
+        data: precipitationDataLimited, // Limit the value to 100
         lineTension: 0,
         pointRadius: 0,
         borderWidth: 0,
@@ -87,7 +78,7 @@ const config = {
         label: "Niederschläge (mm)",
         type: "line",
         hidden: true,
-        data: precipitationData.map((value) => Math.max(0, value - 100) / 10), // Rest from 100
+        data: precipitationDataRest, // Rest from 100
         lineTension: 0,
         pointRadius: 0,
         borderColor: "#40699C",
@@ -102,7 +93,7 @@ const config = {
       {
         label: "Temperatur (°C)",
         hidden: false,
-        data: temperatureData.map((value) => value * 2),
+        data: temperatureDataMapped,
         type: "line",
         borderColor: "#BE4B48",
         lineTension: 0.4,
@@ -114,7 +105,7 @@ const config = {
         label: "Pre1",
         type: "bar",
         hidden: false,
-        data: precipitationData.map((value) => Math.min(value, 100)), // Limit the value to 100
+        data: precipitationDataLimited,
         backgroundColor: "#00B0F0",
         stack: "stack1",
         yAxisID: "y1",
@@ -123,7 +114,7 @@ const config = {
         label: "Pre2",
         type: "bar",
         hidden: false,
-        data: precipitationData.map((value) => Math.max(0, value - 100) / 10), // Rest from 100
+        data: precipitationDataRest,
         backgroundColor: "#40699C",
         stack: "stack1",
         yAxisID: "y1",
@@ -148,15 +139,7 @@ const config = {
         },
         display: true,
         color: "gray",
-        text:
-          "T: " +
-          roundedAverage +
-          "° C " +
-          "    N: " +
-          roundedPrecipitation +
-          " mm    " +
-          hoeheData +
-          " m. ü. NN",
+        text: `T: ${roundedAverage}° C    N: ${roundedPrecipitation} mm    ${hoeheData} m. ü. NN`,
         font: {
           size: 16,
           weight: "normal",

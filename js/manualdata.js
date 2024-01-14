@@ -1,129 +1,95 @@
 function updateChartData() {
-  // Read temperature and precipitation from the input fields
-  const temperatureInput = document.getElementById("temperatureInput").value;
-  const precipitationInput =
-    document.getElementById("precipitationInput").value;
-  const ortInput = document.getElementById("ortInput").value;
-  const hoeheInput = document.getElementById("hoeheInput").value;
-
-  // Validation for location and altitude
-  if (
-    (ortInput.trim() !== "" &&
-      !/^[a-zA-Z0-9\süöäßÜÖÄ.,'"`()/\-]*$/.test(ortInput)) ||
-    ortInput.length > 30
-  ) {
-    alert(
-      "Ungültiger Wert für Ort. Erlaubt sind nur Buchstaben, Zahlen und Leerzeichen. Nicht länger als 30 Zeichen."
-    );
+  // Helper functions to get element values and display alerts
+  const getValue = (id) => document.getElementById(id).value.trim();
+  const showAlert = (message) => {
+    alert(message);
     return;
+  };
+
+  // Retrieve location and altitude values from input fields
+  const ortInput = getValue("ortInput");
+  const hoeheInput = getValue("hoeheInput");
+
+  // Validate location input
+  if ((ortInput && !/^[a-zA-Z0-9\süöäßÜÖÄ.,'"`()/\-]*$/.test(ortInput)) || ortInput.length > 30) {
+    return showAlert("Invalid value for location. Only letters, numbers, and spaces are allowed. Not longer than 30 characters.");
   }
 
-  if (
-    hoeheInput.trim() !== "" &&
-    (!/^\d+$/.test(hoeheInput) || hoeheInput.length > 8)
-  ) {
-    alert(
-      "Ungültiger Wert für Höhe. Erlaubt sind nur Zahlen. Nicht länger als 8 Zeichen."
-    );
-    return;
+  // Validate altitude input
+  if (hoeheInput && (!/^\d+$/.test(hoeheInput) || hoeheInput.length > 8)) {
+    return showAlert("Invalid value for altitude. Only numbers are allowed. Not longer than 8 characters.");
   }
 
-  // Validation of user input
+  // Retrieve temperature and precipitation values from input fields
+  const temperatureInput = getValue("temperatureInput");
+  const precipitationInput = getValue("precipitationInput");
+
+  // Function to validate and parse input strings
+  const validateAndParseInput = (inputString) => {
+    const trimmedInput = inputString.replace(/\s/g, "");
+    return /^(-?\d+(\.\d+)?;){11}-?\d+(\.\d+)?$/.test(trimmedInput) ?
+      trimmedInput.split(";").map((value) => parseFloat(value.replace(",", "."))) :
+      null;
+  };
+
+  // Validate and parse temperature and precipitation inputs
   const validTemperatureValues = validateAndParseInput(temperatureInput);
   const validPrecipitationValues = validateAndParseInput(precipitationInput);
 
+  // Check for invalid input or missing values
   if (!validTemperatureValues || !validPrecipitationValues) {
-    alert(
-      "Ungültige oder fehlende Zeichen! Geben Sie in beide Felder numerische Daten für alle 12 Monate ein."
-    );
-    return;
+    return showAlert("Invalid or missing characters! Enter numerical data for all 12 months in both fields.");
   }
 
-  const temperatureValues = temperatureInput
-    .split(";")
-    .map((value) => parseFloat(value *2));
-  const precipitationValues = precipitationInput
-    .split(";")
-    .map((value) => parseFloat(value));
+  // Process temperature and precipitation values
+  const temperatureValues = validTemperatureValues.map((value) => value * 2);
+  const precipitationValues = validPrecipitationValues;
 
-  const chartPrecipitationData1 = precipitationValues.map((value) =>
-    Math.min(value, 100)
-  );
-  const chartPrecipitationData2 = precipitationValues.map(
-    (value) => Math.max(0, value - 100) / 10
-  );
+  // Map precipitation data for chart
+  const chartPrecipitationData1 = mapPrecipitationDataMin(precipitationValues);
+  const chartPrecipitationData2 = mapPrecipitationDataMax(precipitationValues);
 
-  // Transfer the new data to the diagram
-  myChart.data.datasets[0].data = temperatureValues;
-  myChart.data.datasets[3].data = temperatureValues;
-  myChart.data.datasets[1].data = chartPrecipitationData1;
-  myChart.data.datasets[2].data = chartPrecipitationData2;
-  myChart.data.datasets[4].data = chartPrecipitationData1;
-  myChart.data.datasets[5].data = chartPrecipitationData2;
+  // Update datasets in the chart
+  myChart.data.datasets.forEach((dataset, index) => {
+    if (index === 0 || index === 3) {
+      dataset.data = temperatureValues;
+    } else if (index === 1 || index === 4) {
+      dataset.data = chartPrecipitationData1;
+    } else if (index === 2 || index === 5) {
+      dataset.data = chartPrecipitationData2;
+    }
+  });
+
+  // Update location and altitude data
   hoeheData = hoeheInput;
   ortData = ortInput;
 
-  // Update the diagram with the new data
+  // Update the chart
   myChart.update();
 
-  // Calculate the new values for the average and the sum
-  const temperatureSum = temperatureValues.reduce(
-    (acc, temperature) => acc + temperature,
-    0
-  );
-  const temperatureAverage = temperatureSum / temperatureData.length;
-  const roundedAverageHalf = temperatureAverage / 2;
-  const roundedAverage = parseFloat(roundedAverageHalf.toFixed(1));
-  const precipitationSum = precipitationValues.reduce(
-    (acc, precipitation) => acc + precipitation,
-    0
-  );
+  // Calculate new values for average temperature and total precipitation
+  const temperatureAverage = calculateAverage(temperatureValues);
+  const roundedAverage = parseFloat((temperatureAverage / 2).toFixed(1));
+  const precipitationSum = calculateSum(precipitationValues);
   const roundedPrecipitation = precipitationSum.toFixed(0);
 
-  // Update the diagram captions and titles
-  myChart.options.plugins.subtitle.text =
-    "T: " +
-    roundedAverage +
-    "° C    N: " +
-    roundedPrecipitation +
-    " mm    " +
-    hoeheData +
-    " m. ü. NN";
+  // Update chart subtitles and titles
+  myChart.options.plugins.subtitle.text = `T: ${roundedAverage}° C    N: ${roundedPrecipitation} mm    ${hoeheData} m. ü. NN`;
   myChart.options.plugins.title.text = ortData;
 
-  // Update the axis scaling
-  myChart.options.scales.y1.max =
-    100 + Math.ceil(Math.max(600, ...precipitationValues) / 100) * 10;
-  myChart.options.scales.y1.min =
-    -20 + Math.ceil(Math.min(-20, ...temperatureValues) / 2 / 10) * 2 * 10;
-  myChart.options.scales.y2.max =
-    100 + Math.ceil(Math.max(600, ...precipitationValues) / 100) * 10;
-  myChart.options.scales.y2.min =
-    -20 + Math.ceil(Math.min(-20, ...temperatureValues) / 2 / 10) * 2 * 10;
+  // Calculate scaling values for the y-axes
+  const maxPrecipitation = Math.max(600, ...precipitationValues);
+  const minTemperature = Math.min(-20, ...temperatureValues) / 2;
 
+  // Update y-axis scaling in the chart options
+  myChart.options.scales.y1.max = 100 + Math.ceil(maxPrecipitation / 100) * 10;
+  myChart.options.scales.y1.min = -20 + Math.ceil(minTemperature / 10) * 2 * 10;
+  myChart.options.scales.y2.max = 100 + Math.ceil(maxPrecipitation / 100) * 10;
+  myChart.options.scales.y2.min = -20 + Math.ceil(minTemperature / 10) * 2 * 10;
 
-  // Hide the x-axis title
+  // Hide x-axis title
   myChart.options.scales.x.title.display = false;
+
+  // Update the chart
   myChart.update();
-}
-
-function validateAndParseInput(inputString) {
-  // Remove spaces
-  const trimmedInput = inputString.replace(/\s/g, "");
-
-  // Check whether it only contains numerical values (positive or negative)
-  if (!/^(-?\d+(\.\d+)?;){11}-?\d+(\.\d+)?$/.test(trimmedInput)) {
-    return null;
-  }
-
-  const values = trimmedInput
-    .split(";")
-    .map((value) => parseFloat(value.replace(",", ".")));
-
-  // Check whether the number of values is 12
-  if (values.length !== 12) {
-    return null;
-  }
-
-  return values;
 }
