@@ -1,37 +1,40 @@
-let geodaten = []; // The array to store the CSV data
-let myChart; // The chart object
+let geodaten = [];
 let ortData = "Musterhausen";
 let hoeheData = "300";
 let lonData = "0";
 let latData = "0";
-// Function to update the file name based on the current location
-function updateFileName()
-{
-    // Remove all dots and special characters from the location
-    let cleanOrt = ortData
-        .toLowerCase()
-        .replace(/[^\w\s]/g, "")
-        .replace(/\s/g, "_");
-    let fileName = cleanOrt + ".png";
-    let downloadButton = document.getElementById("downloadButton");
-    downloadButton.download = fileName;
+let roundedAverage;
+let roundedPrecipitation;
+let subtitleText = `T: ${roundedAverage}° C    N: ${roundedPrecipitation} mm    ${hoeheData} m. ü. NN`;
+
+function calculateSum(data) {
+    return data.reduce((acc, value) => acc + value, 0);
 }
-// Function to display data after selecting the location
-function anzeigenNachOrt()
-{
-    // Select first element.
+
+function calculateAverage(data) {
+    const sum = calculateSum(data);
+    return sum / data.length;
+}
+
+function mapPrecipitationDataMin(data) {
+    return data.map((value) => Math.min(value, 100));
+}
+
+function mapPrecipitationDataMax(data) {
+    return data.map((value) => Math.max(0, value - 100) / 10);
+}
+
+function updateFileName() {
+    let cleanOrt = ortData.toLowerCase().replace(/[^\w\s]/g, "").replace(/\s/g, "_");
+    let fileName = cleanOrt + ".png";
+    document.getElementById("downloadButton").download = fileName;
+}
+
+function anzeigenNachOrt() {
     let selectedOrtId = document.querySelector("#ortAuswahl a.selected").id;
+    let datensatz = geodaten.find((datensatz) => datensatz.ID === selectedOrtId);
 
-    // Search the array for data for the selected location
-    let datensatz = geodaten.find(function (datensatz)
-    {
-        return datensatz.ID === selectedOrtId;
-    });
-
-    // Check if the dataset was found
-    if (datensatz)
-    {
-        // Extract column headers
+    if (datensatz) {
         let spalten = Object.keys(datensatz);
         ortData = datensatz["Ort"];
         hoeheData = datensatz["Hoehenlage"];
@@ -39,226 +42,127 @@ function anzeigenNachOrt()
         latData = datensatz["Breitengrad"];
         refData = datensatz["Referenzzeitraum"];
 
-        // Insert precipitation data into the precipitationData array
-        for (let i = 16; i <= 27; i++)
-        {
+        for (let i = 16; i <= 27; i++) {
             let niederschlag = parseFloat(datensatz[spalten[i]].replace(",", "."));
-
-            // Check for invalid values
-            if (!isNaN(niederschlag))
-            {
-                precipitationData[i - 16] = niederschlag;
-            }
-            else
-            {
-                console.warn("Ungültiger Wert für Spalte " + (i + 1));
-                precipitationData[i - 16] = null; // Add null or another value for invalid data
-                updateFileName();
-            }
+            precipitationData[i - 16] = isNaN(niederschlag) ? null : niederschlag;
         }
 
-        // Extract temperature data and insert it into the temperatureData array
-        for (let j = 4; j <= 15; j++)
-        {
+        for (let j = 4; j <= 15; j++) {
             let temperatur = parseFloat(datensatz[spalten[j]].replace(",", "."));
-
-            // Check for invalid values
-            if (!isNaN(temperatur))
-            {
-                temperatureData[j - 4] = temperatur;
-            }
-            else
-            {
-                console.warn("Ungültiger Wert für Temperatur in Spalte " + (j + 1));
-                temperatureData[j - 4] = null;
-            }
+            temperatureData[j - 4] = isNaN(temperatur) ? null : temperatur;
         }
 
-        // Extract temperature data and insert it into the temperatureData array
         console.log("Niederschlagsdaten Array: ", precipitationData);
         console.log("Temperaturdaten Array: ", temperatureData);
-        const temperatureSum = temperatureData.reduce(
-            (acc, temperature) => acc + temperature,
-            0
-        );
 
-        const temperatureAverage = temperatureSum / temperatureData.length;
+        const temperatureAverage = calculateAverage(temperatureData);
         const roundedAverage = parseFloat(temperatureAverage.toFixed(1));
-        const precipitationSum = precipitationData.reduce(
-            (acc, precipitation) => acc + precipitation,
-            0
-        );
+        const precipitationSum = calculateSum(precipitationData);
         const roundedPrecipitation = precipitationSum.toFixed(0);
-        (myChart.options.plugins.subtitle.text =
-            "T: " +
-            roundedAverage +
-            "° C " +
-            "    N: " +
-            roundedPrecipitation +
-            " mm    " +
-            hoeheData +
-            " m. ü. NN"),
-        (myChart.options.plugins.title.text = ortData);
 
-        (myChart.options.scales.y1.max =
-            100 + Math.ceil(Math.max(600, ...precipitationData) / 100) * 10),
-        (myChart.options.scales.y1.min = -20 + Math.ceil(Math.min(-10, ...temperatureData) / 10) * 2 * 10),
-        (myChart.options.scales.y2.max =
-            100 + Math.ceil(Math.max(600, ...precipitationData) / 100) * 10),
-        (myChart.options.scales.y2.min = -20 + Math.ceil(Math.min(-10, ...temperatureData) / 10) * 2 * 10),
-        // Update the chart with the new data
-        (myChart.options.scales.x.title.display = true);
+        myChart.options.plugins.subtitle.text =
+            `T: ${roundedAverage}° C    N: ${roundedPrecipitation} mm    ${hoeheData} m. ü. NN`;
+        myChart.options.plugins.title.text = ortData;
+
+        myChart.options.scales.y1.max = 100 + Math.ceil(Math.max(600, ...precipitationData) / 100) * 10;
+        myChart.options.scales.y1.min = -20 + Math.ceil(Math.min(-10, ...temperatureData) / 10) * 2 * 10;
+        myChart.options.scales.y2.max = myChart.options.scales.y1.max;
+        myChart.options.scales.y2.min = myChart.options.scales.y1.min;
+
+        myChart.options.scales.x.title.display = true;
         updateChart();
         updateFileName();
         updateLeafletMap();
         setValuesInInputFields();
         setData();
-    }
-    else
-    {
+    } else {
         console.error("Datensatz für ausgewählten Ort nicht gefunden.");
     }
 }
 
-// Function to load the CSV file and locations
-function updateChart()
-{
-    config.data.datasets[1].data = precipitationData.map((value) =>
-        Math.min(value, 100)
-    );
-    config.data.datasets[2].data = precipitationData.map(
-        (value) => Math.max(0, value - 100) / 10
-    );
+function updateChart() {
+    config.data.datasets[1].data = mapPrecipitationDataMin(precipitationData);
+    config.data.datasets[2].data = mapPrecipitationDataMax(precipitationData);
     config.data.datasets[0].data = temperatureData.map((value) => value * 2);
-    config.data.datasets[3].data = temperatureData.map((value) => value * 2);
-    config.data.datasets[4].data = precipitationData.map((value) =>
-        Math.min(value, 100)
-    );
-    config.data.datasets[5].data = precipitationData.map(
-        (value) => Math.max(0, value - 100) / 10
-    );
+    config.data.datasets[3].data = config.data.datasets[0].data;
+    config.data.datasets[4].data = config.data.datasets[1].data;
+    config.data.datasets[5].data = config.data.datasets[2].data;
 
     myChart.update();
     updateFileName();
 }
 
-function ladeOrte()
-{
-    // Path to the CSV file
+function ladeOrte() {
     let csvDatei = "data/geodaten.csv";
-
-    // XMLHttpRequest to load the CSV file
     let xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function ()
-    {
-        if (xhr.readyState === 4 && xhr.status === 200)
-        {
-            // Split CSV data into an array of lines
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
             let zeilen = xhr.responseText.split("\n");
+            let spalten = zeilen[0].split(";").map((spalte) => spalte.trim());
 
-            // Extract column headers (first line)
-            let spalten = zeilen[0].split(";").map(function (spalte)
-            {
-                return spalte.trim();
-            });
-
-            // Iterate through the lines and add data to the array
-            for (let i = 1; i < zeilen.length; i++)
-            {
+            for (let i = 1; i < zeilen.length; i++) {
                 let daten = zeilen[i].split(";");
 
-                // Check if the number of values in the line matches the number of column headers
-                if (daten.length === spalten.length)
-                {
+                if (daten.length === spalten.length) {
                     let datensatz = {};
-                    for (let j = 0; j < spalten.length; j++)
-                    {
+                    for (let j = 0; j < spalten.length; j++) {
                         datensatz[spalten[j]] = daten[j].trim();
                     }
                     geodaten.push(datensatz);
-                }
-                else
-                {
+                } else {
                     console.error("Ungültige Zeile in CSV: ", zeilen[i]);
                 }
             }
 
-            // Sort the array by country and then by location
-            geodaten.sort(function (a, b)
-            {
-                let landA = a.Land.toUpperCase(); // Sort case-insensitively
+            geodaten.sort((a, b) => {
+                let landA = a.Land.toUpperCase();
                 let landB = b.Land.toUpperCase();
-                if (landA < landB)
-                {
-                    return -1;
-                }
-                if (landA > landB)
-                {
-                    return 1;
-                }
+                if (landA < landB) return -1;
+                if (landA > landB) return 1;
 
-                // If countries are the same, sort by location
                 let ortA = a.Ort.toUpperCase();
                 let ortB = b.Ort.toUpperCase();
-                if (ortA < ortB)
-                {
-                    return -1;
-                }
-                if (ortA > ortB)
-                {
-                    return 1;
-                }
+                if (ortA < ortB) return -1;
+                if (ortA > ortB) return 1;
+
                 return 0;
             });
 
-            // Implement code here for loading locations into the dropdown menu
             var dropdownContent = document.getElementById("ortAuswahl");
 
-            for (let k = 0; k < geodaten.length; k++)
-            {
+            for (let k = 0; k < geodaten.length; k++) {
                 let option = document.createElement("a");
                 option.id = geodaten[k].ID;
-                option.textContent =
-                    geodaten[k].Land +
-                    " - " +
-                    geodaten[k].Ort +
-                    " (" +
-                    geodaten[k].Referenzzeitraum +
-                    ")";
+                option.textContent = `${geodaten[k].Land} - ${geodaten[k].Ort} (${geodaten[k].Referenzzeitraum})`;
                 dropdownContent.appendChild(option);
-                option.addEventListener("click", function ()
-                {
+
+                option.addEventListener("click", function () {
                     toggleSelection(this);
                     anzeigenNachOrt();
                 });
             }
         }
     };
+
     xhr.open("GET", csvDatei, true);
     xhr.send();
 }
 
-// Function to set example data in the input fields
-function setData()
-{
+function setData() {
     document.getElementById("ortInput").value = ortData;
     document.getElementById("hoeheInput").value = hoeheData;
 }
 
-function setValuesInInputFields()
-{
-    // Convert temperatures to string with semicolon instead of comma
+function setValuesInInputFields() {
     const temperatureString = temperatureData.join(";");
-    // Convert precipitation to string with semicolon instead of comma
     const precipitationString = precipitationData.join(";");
 
-    // Set the values in the input fields
     document.getElementById("temperatureInput").value = temperatureString;
     document.getElementById("precipitationInput").value = precipitationString;
 }
 
-document.addEventListener("DOMContentLoaded", function ()
-{
+document.addEventListener("DOMContentLoaded", function () {
     ladeOrte();
     setValuesInInputFields();
     setData();

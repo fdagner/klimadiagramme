@@ -6,7 +6,7 @@ function myFunction()
 
 function filterFunction()
 {
-    var input, filter, div, options, i;
+    let input, filter, div, options, i;
     input = document.getElementById("searchInput");
     filter = input.value.toUpperCase();
     div = document.getElementById("ortAuswahl");
